@@ -1,0 +1,6 @@
+@TeachNote_Backend_HostAddress = http://localhost:5197
+
+GET {{TeachNote_Backend_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
