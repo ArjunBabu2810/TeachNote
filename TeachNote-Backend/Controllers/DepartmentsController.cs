@@ -31,6 +31,7 @@ public class DepartmentsController : ControllerBase
     [HttpPut("{id}")]
     public IActionResult PutDepartment(int id, Department department)
     {
+        
         return NoContent();
     }
 
