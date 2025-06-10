@@ -286,3 +286,9 @@ C:\Users\ashfa\OneDrive\Desktop\TeachNote\TeachNote-Backend\obj\Debug\net8.0\ref
 C:\Users\ashfa\OneDrive\Desktop\TeachNote\TeachNote-Backend\obj\Debug\net8.0\TeachNote-Backend.pdb
 C:\Users\ashfa\OneDrive\Desktop\TeachNote\TeachNote-Backend\obj\Debug\net8.0\TeachNote-Backend.genruntimeconfig.cache
 C:\Users\ashfa\OneDrive\Desktop\TeachNote\TeachNote-Backend\obj\Debug\net8.0\ref\TeachNote-Backend.dll
+C:\Users\ARJUN\Intership\TeachNote\TeachNote-Backend\bin\Debug\net8.0\IdentityModel.dll
+C:\Users\ARJUN\Intership\TeachNote\TeachNote-Backend\bin\Debug\net8.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\ARJUN\Intership\TeachNote\TeachNote-Backend\bin\Debug\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\ARJUN\Intership\TeachNote\TeachNote-Backend\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\ARJUN\Intership\TeachNote\TeachNote-Backend\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\ARJUN\Intership\TeachNote\TeachNote-Backend\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
