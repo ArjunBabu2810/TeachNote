@@ -11,15 +11,10 @@ namespace TeachNote_Backend.Models
         [Required]
         public DateTime postedDate { get; set; }
 
-        // public int departmentId { get; set; }
-
-        // [ForeignKey("departmentId")]
-        // public Department Department { get; set; }
-
         public int subjectId { get; set; }
 
         [ForeignKey("subjectId")]
-        public Subjects Subjects { get; set; }
+        public Subjects? Subjects { get; set; }
 
         public string description { get; set; }
 

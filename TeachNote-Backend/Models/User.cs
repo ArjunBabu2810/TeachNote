@@ -23,6 +23,6 @@ namespace TeachNote_Backend.Models
         public int departmentId { get; set; }
 
         [ForeignKey("departmentId")]
-        public Department Department {get; set;}
+        public Department? Department {get; set;}
     }
 }

@@ -20,11 +20,11 @@ namespace TeachNote_Backend.Models
 
         public float external { get; set; }
 
-        [ForeignKey("subjecyId")]
-        public Subjects Subjects { get; set; }
+        [ForeignKey("subjectId")]
+        public Subjects? Subjects { get; set; }
 
         [ForeignKey("userId")]
-        public User User { get; set; }
+        public User? User { get; set; }
 
 
     }
