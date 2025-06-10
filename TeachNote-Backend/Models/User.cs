@@ -12,7 +12,7 @@ namespace TeachNote_Backend.Models
 
         [Required]
         [EmailAddress]
-        public string Email { get; set; }
+        public string email { get; set; }
 
         [Required]
         public string role { get; set; }

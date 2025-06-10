@@ -28,8 +28,18 @@ public class UserController : ControllerBase
         {
             return BadRequest(new { message = "Invalid user data" });
         }
-        // _context.Users.Add(user);
-        // await _context.SaveChangesAsync(); 
+        var hashedPassword = BCrypt.Net.BCrypt.HashPassword(user.password);
+
+        var newUser = new User
+        {
+            name = user.name,
+            email = user.email,
+            password = hashedPassword,
+            role = user.role,
+            departmentId = user.departmentId
+        };
+        _context.Users.Add(newUser);
+        await _context.SaveChangesAsync(); 
         return Ok(new { message = "New user added succesfully " });
     }
 
