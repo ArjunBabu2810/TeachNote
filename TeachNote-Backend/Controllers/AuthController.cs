@@ -1,14 +1,18 @@
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using TeachNote_Backend.Models;
 
 [ApiController]
 [Route("api/[controller]")]
 public class AuthController : ControllerBase
 {
     private readonly JwtTokenService _jwt;
-
-    public AuthController(JwtTokenService jwt)
+    private readonly AppDbContext _context;
+    public AuthController(AppDbContext context,JwtTokenService jwt)
     {
+        _context = context;
         _jwt = jwt;
     }
 
@@ -19,28 +23,33 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    public IActionResult Login([FromBody] LoginRequest request)
+    public async Task<IActionResult> Login([FromBody] LoginRequest request)
     {
         Console.WriteLine($"Login attempt by: {request.Email}");
         try
         {
-
-            if (request.Email == "admin" && request.Password == "admin")
+            if (string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password))
             {
-                var token = _jwt.GenerateToken(request.Email, "Admin");
-                return Ok(new { Token = token });
+                return BadRequest(new { message = "Email and password are needed" });
             }
-
-            Console.WriteLine("Login failed.");
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.email == request.Email);
+            if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.password))
+            {
+                return Unauthorized(new {message = "Invalid Credentials !"});
+            }
+            
+            Console.WriteLine("Login Success.");
+            var token = _jwt.GenerateToken(request.Email, user.email);
+            return Ok(new { Token = token });
+            
         }
-        catch (System.Exception)
+        catch (System.Exception ex)
         {
             Console.WriteLine("Login failed.");
+            Console.WriteLine($"Login error: {ex.Message}");
+            return StatusCode(500, new { message = "Internal Server Error. Please try again later." });
             throw;
         }
-        
-            return Unauthorized();
-            
     }
 }
 

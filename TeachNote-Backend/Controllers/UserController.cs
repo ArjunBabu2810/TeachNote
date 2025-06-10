@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using TeachNote_Backend.Models;
 
@@ -14,10 +15,12 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("all")]
-    public ActionResult<IEnumerable<User>> GetUsers()
+    public async Task<ActionResult<List<User>>> GetUsers()
     {
-        return new List<User> { };
+        var users = await _context.Users.Include(u=>u.Department).ToListAsync();
+        return users;
     }
+    
 
     [HttpPost("add")]
     public  async Task<IActionResult> AddUser([FromBody] User user)
@@ -29,14 +32,20 @@ public class UserController : ControllerBase
             return BadRequest(new { message = "Invalid user data" });
         }
         var hashedPassword = BCrypt.Net.BCrypt.HashPassword(user.password);
-
+        // var dept = await _context.Departments.FindAsync(user.departmentId);
+        var dept = await _context.Departments.AsNoTracking().FirstOrDefaultAsync(d => d.id == user.departmentId);
+        if (dept == null)
+        {
+            return NotFound(new { message = "Department not found!" });
+        }
+        Console.WriteLine($"attempt to add user department={dept.id}");
         var newUser = new User
         {
             name = user.name,
             email = user.email,
             password = hashedPassword,
             role = user.role,
-            departmentId = user.departmentId
+            departmentId = user.departmentId,
         };
         _context.Users.Add(newUser);
         await _context.SaveChangesAsync(); 
