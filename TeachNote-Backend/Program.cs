@@ -1,58 +1,10 @@
-// using Microsoft.EntityFrameworkCore;
-
-// var builder = WebApplication.CreateBuilder(args);
-
-// // Add services to the container.
-// // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-// builder.Services.AddControllers();
-// builder.Services.AddDbContext<AppDbContext>(options =>
-//     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-// builder.Services.AddEndpointsApiExplorer();
-// builder.Services.AddSwaggerGen();
-
-// var app = builder.Build();
-
-// // Configure the HTTP request pipeline.
-// if (app.Environment.IsDevelopment())
-// {
-//     app.UseSwagger();
-//     app.UseSwaggerUI();
-// }
-
-// app.UseHttpsRedirection();
-// app.UseAuthorization();
-// app.MapControllers();
-// // var summaries = new[]
-// // {
-// //     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-// // };
-
-// // app.MapGet("/weatherforecast", () =>
-// // {
-// //     var forecast =  Enumerable.Range(1, 5).Select(index =>
-// //         new WeatherForecast
-// //         (
-// //             DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-// //             Random.Shared.Next(-20, 55),
-// //             summaries[Random.Shared.Next(summaries.Length)]
-// //         ))
-// //         .ToArray();
-// //     return forecast;
-// // })
-// // .WithName("GetWeatherForecast")
-// // .WithOpenApi();
-
-// app.Run();
-
-// record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-// {
-//     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-// }
-
-
+using System.Text;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using TeachNote_Backend.Models;  // Import your AppDbContext namespace
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -62,10 +14,57 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddControllers();
 
+// Add CORS before other services
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
+builder.Services.AddSingleton<JwtTokenService>();
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    var jwtSettings = builder.Configuration.GetSection("JwtSettings");
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtSettings["Issuer"],
+        ValidAudience = jwtSettings["Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(jwtSettings["Key"])
+        )
+    };
+});
+
+
+builder.Services.AddAuthorization();
 var app = builder.Build();
 
+// Configure the HTTP request pipeline
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
+app.UseCors();
+app.UseRouting();
+app.UseAuthentication();
 app.UseAuthorization();   // Fix typo here (Authorization, not Autherization)
 
 app.MapControllers();     // Use MapControllers, not UseMapControllers
+
+app.MapGet("/", () => "API is running!");
+app.MapGet("/test", () => "Test endpoint works!");
 
 app.Run();
