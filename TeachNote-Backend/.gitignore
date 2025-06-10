@@ -3,11 +3,16 @@
 ./obj/
 ./out/
 
+bin/
+obj/
+out/
+
 # Ignore user-specific files
 *.user
 *.suo
 *.userosscache
 *.sln.docstates
+test.html
 
 # Ignore Rider project files
 .idea/
