@@ -1,0 +1,48 @@
+# Ignore build results
+bin/
+obj/
+out/
+
+# Ignore user-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Ignore Rider project files
+.idea/
+
+# Ignore Visual Studio Code settings
+.vscode/
+
+# Ignore database and logs
+*.db
+*.log
+
+# Ignore sensitive config (if you use secrets)
+appsettings.Development.json
+secrets.json
+
+# Ignore packages (if not using PackageReference)
+packages/
+
+# Ignore NuGet binary cache
+*.nupkg
+
+# Ignore JetBrains Rider
+.idea/
+
+# Ignore dotnet tool artifacts
+**/.store/
+**/.tools/
+
+# Ignore Node modules (if using node for frontend)
+node_modules/
+
+# Ignore coverage reports
+coverage/
+*.lcov
+
+# Ignore environment files
+.env
+.env.*
