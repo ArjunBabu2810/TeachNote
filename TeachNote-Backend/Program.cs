@@ -57,6 +57,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
 }
+app.UseStaticFiles();
 app.UseCors();
 app.UseRouting();
 app.UseAuthentication();
