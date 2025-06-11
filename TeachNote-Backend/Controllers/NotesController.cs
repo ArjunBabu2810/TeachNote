@@ -19,7 +19,7 @@ namespace TeachNote_Backend.Controllers
         }
 
         // ───────────────────────────────────────────────
-        // GET: api/notes
+        // GET: api/notes     tested successfully
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Notes>>> GetAllNotes()
         {
@@ -29,7 +29,7 @@ namespace TeachNote_Backend.Controllers
         }
 
         // ───────────────────────────────────────────────
-        // GET: api/notes/5
+        // GET: api/notes/5     tested successfully
         [HttpGet("{id:int}")]
         public async Task<ActionResult<Notes>> GetNote(int id)
         {
@@ -41,7 +41,7 @@ namespace TeachNote_Backend.Controllers
         }
 
         // ───────────────────────────────────────────────
-        // POST: api/notes/upload
+        // POST: api/notes/upload          tested successfully
         // Receives a PDF via multipart/form-data
         [HttpPost("upload")]
         public async Task<IActionResult> UploadNote(
@@ -53,10 +53,19 @@ namespace TeachNote_Backend.Controllers
             if (file is null || file.Length == 0 || Path.GetExtension(file.FileName).ToLower() != ".pdf")
                 return BadRequest("Please upload a valid PDF file.");
 
+            // 🔐 Subject existence check
+            var subjectExists = await _context.Subjects.AnyAsync(s => s.id == subjectId);
+            if (!subjectExists)
+                return NotFound($"Subject with id {subjectId} not found.");
+
             // 2️⃣ Ensure uploads folder
-            var uploadsRoot = Path.Combine(_env.WebRootPath, "uploads");
-            if (!Directory.Exists(uploadsRoot))
-                Directory.CreateDirectory(uploadsRoot);
+            var webRoot = _env.WebRootPath ?? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+            var uploadsRoot = Path.Combine(webRoot, "uploads");
+            Directory.CreateDirectory(uploadsRoot);      // Creates both if missing
+
+            // var uploadsRoot = Path.Combine(_env.WebRootPath, "uploads");
+            // if (!Directory.Exists(uploadsRoot))
+            //     Directory.CreateDirectory(uploadsRoot);
 
             // 3️⃣ Create unique filename
             var fileName = $"{Guid.NewGuid()}.pdf";
@@ -84,7 +93,7 @@ namespace TeachNote_Backend.Controllers
         }
 
         // ───────────────────────────────────────────────
-        // DELETE: api/notes/5
+        // DELETE: api/notes/5       tested successfully
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteNote(int id)
         {
@@ -103,7 +112,7 @@ namespace TeachNote_Backend.Controllers
         }
 
         // ───────────────────────────────────────────────
-        // GET: api/notes/download/abc123.pdf
+        // GET: api/notes/download/abc123.pdf       tested successfully
         [HttpGet("download/{fileName}")]
         public IActionResult Download(string fileName)
         {
@@ -121,7 +130,7 @@ namespace TeachNote_Backend.Controllers
         // Filter by both	/api/notes/filter?semester=5&subjectId=3
         // No filters (get all)	/api/notes/filter
         
-        // GET: api/notes/filter?semester=5&subjectId=3
+        // GET: api/notes/filter?semester=5&subjectId=3        tested successfully
         [HttpGet("filter")]
         public async Task<ActionResult<IEnumerable<Notes>>> FilterNotes([FromQuery] int? semester, [FromQuery] int? subjectId)
         {
