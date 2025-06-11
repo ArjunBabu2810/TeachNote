@@ -52,8 +52,51 @@ public class UserController : ControllerBase
         return Ok(new { message = "New user added succesfully " });
     }
 
-    [HttpGet("test")]
 
+    [HttpGet("bydepartment")]
+    public async Task<ActionResult<List<User>>> GetUsersByDeparment(int id)
+    {
+        var users = await _context.Users.Include(u => u.Department).Where(u => u.departmentId == id).ToListAsync();
+        return Ok(users);
+    }
+
+    [HttpPut("update/{id}")]
+    public async Task<IActionResult> UpdateUser(int id, User updatedUser)
+    {
+        var user = await _context.Users.FindAsync(id);
+
+        if (user == null)
+        {
+            return NotFound(new {message = "user not found"});
+        }
+        try
+        {
+            user.name = updatedUser.name;
+            user.email = updatedUser.email;
+            user.role = updatedUser.role;
+            user.departmentId = updatedUser.departmentId;
+            await _context.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, "Error in updating user");
+        }
+        return Ok(new { message = "user updated" });
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteUser(int id)
+    {
+        var user = await _context.Users.FindAsync(id);
+        if (user == null)
+        {
+            return NotFound(new { message = "User Not Found" });
+        }
+        _context.Users.Remove(user);
+        await _context.SaveChangesAsync();
+        return Ok(new { messsage = "User Deleted Successfully" });
+    }
+    [HttpGet("test")]
     public IActionResult Test()
     {
         Console.WriteLine("Call received");
