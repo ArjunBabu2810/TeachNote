@@ -296,3 +296,13 @@ C:\Users\ARJUN\Intership\TeachNote\TeachNote-Backend\obj\Debug\net8.0\refint\Tea
 C:\Users\ARJUN\Intership\TeachNote\TeachNote-Backend\obj\Debug\net8.0\TeachNote-Backend.pdb
 C:\Users\ARJUN\Intership\TeachNote\TeachNote-Backend\obj\Debug\net8.0\TeachNote-Backend.genruntimeconfig.cache
 C:\Users\ARJUN\Intership\TeachNote\TeachNote-Backend\obj\Debug\net8.0\ref\TeachNote-Backend.dll
+C:\Users\ashfa\OneDrive\Desktop\TeachNote\TeachNote-Backend\bin\Debug\net8.0\BCrypt.Net-Next.dll
+C:\Users\ashfa\OneDrive\Desktop\TeachNote\TeachNote-Backend\bin\Debug\net8.0\IdentityModel.dll
+C:\Users\ashfa\OneDrive\Desktop\TeachNote\TeachNote-Backend\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\ashfa\OneDrive\Desktop\TeachNote\TeachNote-Backend\bin\Debug\net8.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\ashfa\OneDrive\Desktop\TeachNote\TeachNote-Backend\bin\Debug\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\ashfa\OneDrive\Desktop\TeachNote\TeachNote-Backend\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\ashfa\OneDrive\Desktop\TeachNote\TeachNote-Backend\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\ashfa\OneDrive\Desktop\TeachNote\TeachNote-Backend\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\ashfa\OneDrive\Desktop\TeachNote\TeachNote-Backend\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\ashfa\OneDrive\Desktop\TeachNote\TeachNote-Backend\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll

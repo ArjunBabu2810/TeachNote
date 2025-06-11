@@ -15,14 +15,14 @@ namespace TeachNote_Backend.Controllers
             _context = context;
         }
 
-        // GET: api/Subjects
+        // GET: api/Subjects      tested succesfully
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Subjects>>> GetSubjects()
         {
             return await _context.Subjects.Include(s => s.Department).ToListAsync();
         }
 
-        // GET: api/Subjects/5
+        // GET: api/Subjects/5     tested succesfully
         [HttpGet("{id}")]
         public async Task<ActionResult<Subjects>> GetSubject(int id)
         {
@@ -36,7 +36,7 @@ namespace TeachNote_Backend.Controllers
             return subject;
         }
 
-        // POST: api/Subjects
+        // POST: api/Subjects    tested succesfully
         [HttpPost]
         public async Task<ActionResult<Subjects>> PostSubject(Subjects subject)
         {
@@ -46,7 +46,7 @@ namespace TeachNote_Backend.Controllers
             return CreatedAtAction(nameof(GetSubject), new { id = subject.id }, subject);
         }
 
-        // PUT: api/Subjects/5
+        // PUT: api/Subjects/5       tested succesfully
         [HttpPut("{id}")]
         public async Task<IActionResult> PutSubject(int id, Subjects updatedSubject)
         {
@@ -82,7 +82,7 @@ namespace TeachNote_Backend.Controllers
             return NoContent();
         }
 
-        // DELETE: api/Subjects/5
+        // DELETE: api/Subjects/5       tested succesfully
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSubject(int id)
         {
