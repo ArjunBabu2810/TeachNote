@@ -37,10 +37,10 @@ public class AuthController : ControllerBase
             {
                 return Unauthorized(new {message = "Invalid Credentials !"});
             }
-            
+            var role = user.role;
             Console.WriteLine("Login Success.");
             var token = _jwt.GenerateToken(request.Email, user.email);
-            return Ok(new { Token = token });
+            return Ok(new { Token = token ,user.id,user.email,role,user.departmentId });
             
         }
         catch (System.Exception ex)

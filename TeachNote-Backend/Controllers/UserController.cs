@@ -20,6 +20,19 @@ public class UserController : ControllerBase
         var users = await _context.Users.Include(u=>u.Department).ToListAsync();
         return users;
     }
+
+    [HttpGet("{id}")]
+    public async Task<ActionResult<User>> GetUserById(int id)
+    {
+        Console.WriteLine($"Fetching user by id {id}");
+        var users = await _context.Users.Include(u=>u.Department).FirstOrDefaultAsync(u=>u.id==id);
+        if (users == null)
+        {
+            return NoContent();
+        }
+        
+        return users;
+    }
     
 
     [HttpPost("add")]
@@ -79,6 +92,7 @@ public class UserController : ControllerBase
         }
         catch (Exception ex)
         {
+            Console.WriteLine(ex.Message);
             return StatusCode(500, "Error in updating user");
         }
         return Ok(new { message = "user updated" });
@@ -118,6 +132,7 @@ public class UserController : ControllerBase
         }
         catch (Exception ex)
         {
+            Console.WriteLine(ex.Message);
             return StatusCode(500, "Error in updating user");
         }
         return Ok(new { message = "user updated" });
