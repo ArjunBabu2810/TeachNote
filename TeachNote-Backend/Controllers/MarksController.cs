@@ -13,116 +13,79 @@ public class MarksController : ControllerBase
         _context = context;
     }
 
-
-    // GET: api/marks/student/5
+// GET: api/marks/studentid/3
     [HttpGet("student/{studentId}")]
-    public async Task<ActionResult<object>> GetMarksByStudentId(int studentId)
+public async Task<ActionResult<object>> GetMarksByStudentId(int studentId)
+{
+    var marks = await _context.Marks
+        .Include(m => m.Subjects)
+        .Include(m => m.User)
+            .ThenInclude(u => u.Department) // Include department here
+        .Where(m => m.userId == studentId)
+        .ToListAsync();
+
+    if (!marks.Any())
+        return NotFound("No marks found for this student.");
+
+    var student = marks.First().User;
+
+    return Ok(new
     {
-        var marks = await _context.Marks
-            .Include(m => m.Subjects)
-            .Include(m => m.User)
-            .Where(m => m.userId == studentId)
-            .ToListAsync();
-
-        if (!marks.Any())
-            return NotFound("No marks found for this student.");
-
-        var student = marks.First().User;
-
-        return Ok(new
+        StudentId = student.id,
+        StudentName = student.name,
+        StudentEmail = student.email,
+        DepartmentId = student.departmentId,
+        DepartmentName = student.Department?.name, 
+        Marks = marks.Select(m => new
         {
-            StudentId = student.id,
-            StudentName = student.name,
-            StudentEmail = student.email,
-            DepartmentId = student.departmentId,
-            Marks = marks.Select(m => new
-            {
-                SubjectId = m.subjectId,
-                SubjectName = m.Subjects.name,
-                Semester = m.Subjects.semester,
-                Internal1 = m.internal1,
-                Internal2 = m.internal2,
-                External = m.external,
-                Total = m.internal1 + m.internal2 + m.external
-            }).ToList()
-        });
-    }
-
-// .......sample outpuut......
-//    {
-//   "StudentId": 5,
-//   "StudentName": "John Doe",
-//   "StudentEmail": "john@example.com",
-//   "DepartmentId": 2,
-//   "Marks": [
-//     {
-//       "SubjectId": 1,
-//       "SubjectName": "Math",
-//       "Semester": 1,
-//       "Internal1": 12,
-//       "Internal2": 13,
-//       "External": 35,
-//       "Total": 60
-//     },
-//     ...
-//   ]
-// }
-
-
+            SubjectId = m.subjectId,
+            SubjectName = m.Subjects.name,
+            Semester = m.Subjects.semester,
+            Internal1 = m.internal1,
+            Internal2 = m.internal2,
+            External = m.external,
+            Total = m.internal1 + m.internal2 + m.external
+        }).ToList()
+    });
+}
 
     // GET: api/marks/subject/3
-    [HttpGet("subject/{subjectId}")]
-    public async Task<ActionResult<object>> GetMarksBySubjectId(int subjectId)
+[HttpGet("subject/{subjectId}")]
+public async Task<ActionResult<object>> GetMarksBySubjectId(int subjectId)
+{
+    var marks = await _context.Marks
+        .Include(m => m.User)
+        .Include(m => m.Subjects)
+            .ThenInclude(s => s.Department) // Include Department
+        .Where(m => m.subjectId == subjectId)
+        .ToListAsync();
+
+    if (!marks.Any())
+        return NotFound("No marks found for this subject.");
+
+    var subjectInfo = marks.First().Subjects;
+
+    var result = new
     {
-        var marks = await _context.Marks
-            .Include(m => m.User)
-            .Include(m => m.Subjects)
-            .Where(m => m.subjectId == subjectId)
-            .ToListAsync();
-
-        if (!marks.Any())
-            return NotFound("No marks found for this subject.");
-
-        var subjectInfo = marks.First().Subjects;
-
-        var result = new
+        SubjectId = subjectId,
+        SubjectName = subjectInfo.name,
+        Semester = subjectInfo.semester,
+        DepartmentId = subjectInfo.departmentId,
+        DepartmentName = subjectInfo.Department?.name,
+        Students = marks.Select(m => new
         {
-            SubjectId = subjectId,
-            SubjectName = subjectInfo.name,
-            Semester = subjectInfo.semester,
-            Students = marks.Select(m => new
-            {
-                StudentId = m.User.id,
-                StudentName = m.User.name,
-                StudentEmail = m.User.email,
-                Internal1 = m.internal1,
-                Internal2 = m.internal2,
-                External = m.external,
-                Total = m.internal1 + m.internal2 + m.external
-            }).ToList()
-        };
+            StudentId = m.User.id,
+            StudentName = m.User.name,
+            StudentEmail = m.User.email,
+            Internal1 = m.internal1,
+            Internal2 = m.internal2,
+            External = m.external,
+            Total = m.internal1 + m.internal2 + m.external
+        }).ToList()
+    };
 
-        return Ok(result);
-    }
-// .............sample output............
-//{
-//   "SubjectId": 3,
-//   "SubjectName": "Database Systems",
-//   "Semester": 4,
-//   "Students": [
-//     {
-//       "StudentId": 10,
-//       "StudentName": "Alice Johnson",
-//       "StudentEmail": "alice@example.com",
-//       "Internal1": 13,
-//       "Internal2": 15,
-//       "External": 40,
-//       "Total": 68
-//     },
-//     ...
-//   ]
-// }
-
+    return Ok(result);
+}
 
 [HttpGet("student/{studentId}/semester/{semesterNumber}")]
 public async Task<ActionResult<object>> GetMarksByStudentAndSemester(int studentId, int semesterNumber)
