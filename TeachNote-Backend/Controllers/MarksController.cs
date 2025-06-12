@@ -58,29 +58,59 @@ public async Task<ActionResult<IEnumerable<object>>> GetMarksBySubjectId(int sub
     return Ok(marks);
 }
 // GET: api/marks/student/5/semester/2
+// [HttpGet("student/{studentId}/semester/{semesterNumber}")]
+// public async Task<ActionResult<object>> GetMarksByStudentAndSemester(int studentId, int semesterNumber)
+// {
+//     var marks = await _context.Marks
+//         .Include(m => m.Subjects)
+//         .Where(m => m.userId == studentId && m.Subjects.semester == semesterNumber) // 🔄 changed here
+//         .Select(m => new {
+//             SubjectName = m.Subjects.name,
+//             Internal1 = m.internal1,
+//             Internal2 = m.internal2,
+//             External = m.external,
+//             Total = m.internal1 + m.internal2 + m.external
+//         })
+//         .ToListAsync();
+
+//     if (!marks.Any())
+//         return NotFound("No marks found for this student in the given semester.");
+
+//     float semesterTotal = marks.Sum(m => m.Total);
+
+//     return Ok(new {
+//         Semester = semesterNumber,
+//         Subjects = marks,
+//         SemesterTotal = semesterTotal
+//     });
+// }
 [HttpGet("student/{studentId}/semester/{semesterNumber}")]
 public async Task<ActionResult<object>> GetMarksByStudentAndSemester(int studentId, int semesterNumber)
 {
     var marks = await _context.Marks
         .Include(m => m.Subjects)
-        .Where(m => m.userId == studentId && m.Subjects.semester == semesterNumber) // 🔄 changed here
-        .Select(m => new {
-            SubjectName = m.Subjects.name,
-            Internal1 = m.internal1,
-            Internal2 = m.internal2,
-            External = m.external,
-            Total = m.internal1 + m.internal2 + m.external
-        })
+        .Where(m => m.userId == studentId && m.Subjects.semester == semesterNumber)
         .ToListAsync();
 
     if (!marks.Any())
         return NotFound("No marks found for this student in the given semester.");
 
-    float semesterTotal = marks.Sum(m => m.Total);
+    float semesterTotal = marks.Sum(m => m.internal1 + m.internal2 + m.external);
 
     return Ok(new {
         Semester = semesterNumber,
-        Subjects = marks,
+        Subjects = marks.Select(m => new {
+            Subject = m.Subjects,    // ✅ full subject object
+            Mark = new {
+                m.id,
+                m.userId,
+                m.subjectId,
+                m.internal1,
+                m.internal2,
+                m.external,
+                Total = m.internal1 + m.internal2 + m.external
+            }
+        }),
         SemesterTotal = semesterTotal
     });
 }
