@@ -13,6 +13,10 @@ namespace TeachNote_Backend.Models
 
         public int subjectId { get; set; }
 
+        public int userId { get; set; }
+        [ForeignKey("userId")]
+        public User? user { get; set; }
+
         [ForeignKey("subjectId")]
         public Subjects? Subjects { get; set; }
 
