@@ -45,12 +45,12 @@ namespace TeachNote_Backend.Controllers
         // Receives a PDF via multipart/form-data
         [HttpPost("upload")]
         public async Task<IActionResult> UploadNote(
-            [FromForm] IFormFile file,
+            [FromForm] IFormFile pdfFile,
             [FromForm] int subjectId,
             [FromForm] string description)
         {
             // 1️⃣ Validate file
-            if (file is null || file.Length == 0 || Path.GetExtension(file.FileName).ToLower() != ".pdf")
+            if (pdfFile is null || pdfFile.Length == 0 || Path.GetExtension(pdfFile.FileName).ToLower() != ".pdf")
                 return BadRequest("Please upload a valid PDF file.");
 
             // 🔐 Subject existence check
@@ -74,7 +74,7 @@ namespace TeachNote_Backend.Controllers
             // 4️⃣ Save file to disk
             await using (var fs = new FileStream(fullPath, FileMode.Create))
             {
-                await file.CopyToAsync(fs);
+                await pdfFile.CopyToAsync(fs);
             }
 
             // 5️⃣ Persist note record
@@ -83,7 +83,8 @@ namespace TeachNote_Backend.Controllers
                 postedDate = DateTime.UtcNow,
                 subjectId = subjectId,
                 description = description,
-                pdfFile = Path.Combine("uploads", fileName) // relative, e.g., uploads/abc.pdf
+                pdfFile = fileName // ← only stores "abc123.pdf"
+                // pdfFile = Path.Combine("uploads", fileName) // relative, e.g., uploads/abc.pdf
             };
 
             _context.Notes.Add(note);
@@ -124,12 +125,28 @@ namespace TeachNote_Backend.Controllers
             var mimeType = "application/pdf";
             return PhysicalFile(filePath, mimeType, fileName);
         }
+        
+        // ───────────────────────────────────────────────
+        // GET: api/notes/view/abc123.pdf       tested successfully
+        [HttpGet("view/{fileName}")]
+        public IActionResult view(string fileName)
+        {
+            var filePath = Path.Combine(_env.WebRootPath, "uploads", fileName);
+
+            if (!System.IO.File.Exists(filePath))
+                return NotFound("File not found.");
+
+            var mimeType = "application/pdf";
+
+            // ✅ NEW: lets browser display PDF inline
+            return PhysicalFile(filePath, mimeType);
+        }
 
         // Filter by semester only	/api/notes/filter?semester=5
         // Filter by subject only	/api/notes/filter?subjectId=3
         // Filter by both	/api/notes/filter?semester=5&subjectId=3
         // No filters (get all)	/api/notes/filter
-        
+
         // GET: api/notes/filter?semester=5&subjectId=3        tested successfully
         [HttpGet("filter")]
         public async Task<ActionResult<IEnumerable<Notes>>> FilterNotes([FromQuery] int? semester, [FromQuery] int? subjectId)
