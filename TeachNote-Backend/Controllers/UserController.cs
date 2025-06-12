@@ -96,6 +96,32 @@ public class UserController : ControllerBase
         await _context.SaveChangesAsync();
         return Ok(new { messsage = "User Deleted Successfully" });
     }
+
+    [HttpPost("updatePassword/{id}")]
+    public async Task<IActionResult> UpdatePassword(int id, User updatedUser)
+    {
+        var user = await _context.Users.FindAsync(id);
+
+        if (user == null)
+        {
+            return NotFound(new {message = "user not found"});
+        }
+        try
+        {
+            if (!BCrypt.Net.BCrypt.Verify(updatedUser.password, user.password))
+            {
+                return BadRequest(new { message = "Enter Previous password correctly" });
+            }
+            user.password = BCrypt.Net.BCrypt.HashPassword(updatedUser.password);
+            
+            await _context.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, "Error in updating user");
+        }
+        return Ok(new { message = "user updated" });
+    }
     [HttpGet("test")]
     public IActionResult Test()
     {
