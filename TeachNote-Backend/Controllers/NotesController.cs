@@ -39,6 +39,16 @@ namespace TeachNote_Backend.Controllers
 
             return note is null ? NotFound() : note;
         }
+        [HttpGet("teacher/{id:int}")]
+        public async Task<ActionResult<IEnumerable<Notes>>> GetNoteByTeacher(int id)
+        {
+            var note = await _context.Notes
+                                     .Include(n => n.Subjects)
+                                     .Where(n => n.userId == id)
+                                     .ToListAsync();
+
+            return note is null ? NotFound() : note;
+        }
 
         // ───────────────────────────────────────────────
         // POST: api/notes/upload          tested successfully
@@ -47,8 +57,13 @@ namespace TeachNote_Backend.Controllers
         public async Task<IActionResult> UploadNote(
             [FromForm] IFormFile pdfFile,
             [FromForm] int subjectId,
+            [FromForm] int userId,
             [FromForm] string description)
+            
         {
+            Console.WriteLine($"user: ------------------{userId}");
+            Console.WriteLine($"{subjectId}");
+            Console.WriteLine($"{description}");
             // 1️⃣ Validate file
             if (pdfFile is null || pdfFile.Length == 0 || Path.GetExtension(pdfFile.FileName).ToLower() != ".pdf")
                 return BadRequest("Please upload a valid PDF file.");
@@ -76,11 +91,11 @@ namespace TeachNote_Backend.Controllers
             {
                 await pdfFile.CopyToAsync(fs);
             }
-
             // 5️⃣ Persist note record
             var note = new Notes
             {
                 postedDate = DateTime.UtcNow,
+                userId = userId,
                 subjectId = subjectId,
                 description = description,
                 pdfFile = fileName // ← only stores "abc123.pdf"
