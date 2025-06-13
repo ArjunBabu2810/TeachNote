@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TeachNote_Backend.Models;
 using System.IO;
+using Microsoft.Extensions.Logging.Console;
 
 namespace TeachNote_Backend.Controllers
 {
@@ -24,7 +25,7 @@ namespace TeachNote_Backend.Controllers
         public async Task<ActionResult<IEnumerable<Notes>>> GetAllNotes()
         {
             return await _context.Notes
-                                 .Include(n => n.Subjects)
+                                 .Include(n => n.Subjects).ThenInclude(s=>s.Department)
                                  .ToListAsync();
         }
 
@@ -39,6 +40,20 @@ namespace TeachNote_Backend.Controllers
 
             return note is null ? NotFound() : note;
         }
+
+        [HttpGet("department/{id:int}")]
+        public async Task<ActionResult<IEnumerable<Notes>>> GetNoteByDepartment(int id)
+        {
+            Console.WriteLine($"Department wise note fetching:{id}");
+            var note = await _context.Notes
+                                     .Include(n => n.Subjects)
+                                     .Where(n=>n.Subjects.departmentId==id)
+                                     .ToListAsync();
+            Console.WriteLine("Note id "+note[0].subjectId);
+            return note is null ? NotFound() : note;
+        }
+
+
         [HttpGet("teacher/{id:int}")]
         public async Task<ActionResult<IEnumerable<Notes>>> GetNoteByTeacher(int id)
         {
