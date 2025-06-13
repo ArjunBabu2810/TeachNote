@@ -152,6 +152,7 @@ public async Task<ActionResult<object>> GetMarksByStudentAndSemester(int student
         var existingMark = await _context.Marks
             .FirstOrDefaultAsync(m => m.userId == mark.userId && m.subjectId == mark.subjectId);
 
+
         if (existingMark != null)
         {
             // Update existing values
@@ -162,7 +163,13 @@ public async Task<ActionResult<object>> GetMarksByStudentAndSemester(int student
             await _context.SaveChangesAsync();
             return Ok(existingMark); // return updated mark
         }
+        var student = await _context.Users.FirstOrDefaultAsync(u => u.id == mark.userId);
+        var subject = await _context.Subjects.FirstOrDefaultAsync(s => s.id == mark.subjectId);
 
+        if (student==null || student.departmentId != subject.departmentId)
+        {
+            return BadRequest(new { message = "This student is not from your department" });
+        }
         // If not found, insert new mark
         _context.Marks.Add(mark);
         await _context.SaveChangesAsync();
