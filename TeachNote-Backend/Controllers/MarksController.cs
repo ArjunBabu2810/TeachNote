@@ -139,12 +139,34 @@ public async Task<ActionResult<object>> GetMarksByStudentAndSemester(int student
 
 
     // POST: api/marks
-    [HttpPost]
+    // [HttpPost]
+    // public async Task<ActionResult<Marks>> PostMarks(Marks mark)
+    // {
+    //     _context.Marks.Add(mark);
+    //     await _context.SaveChangesAsync();
+    //     return CreatedAtAction(nameof(PostMarks), new { id = mark.id }, mark);
+    // }
     public async Task<ActionResult<Marks>> PostMarks(Marks mark)
     {
+        // Check if mark already exists for the given userId and subjectId
+        var existingMark = await _context.Marks
+            .FirstOrDefaultAsync(m => m.userId == mark.userId && m.subjectId == mark.subjectId);
+
+        if (existingMark != null)
+        {
+            // Update existing values
+            existingMark.internal1 = mark.internal1;
+            existingMark.internal2 = mark.internal2;
+            existingMark.external = mark.external;
+
+            await _context.SaveChangesAsync();
+            return Ok(existingMark); // return updated mark
+        }
+
+        // If not found, insert new mark
         _context.Marks.Add(mark);
         await _context.SaveChangesAsync();
-        return CreatedAtAction(nameof(PostMarks), new { id = mark.id }, mark);
+        return CreatedAtAction(nameof(PostMarks), new { id = mark.id }, mark); // return newly created mark
     }
 
     // PUT: api/marks/5
