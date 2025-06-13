@@ -37,8 +37,9 @@ namespace TeachNote_Backend.Controllers
         }
 
         [HttpGet("department/{id}")]
-        public async Task<ActionResult<IEnumerable<Subjects>>> GetSubjectsint(int id)
+        public async Task<ActionResult<IEnumerable<Subjects>>> GetSubjectsByDepartment(int id)
         {
+            Console.WriteLine($"Subject fetch by department id :{id}");
             var subjects = await _context.Subjects.Include(s => s.Department)
                                             .Where(s => s.departmentId == id)
                                             .ToListAsync();
