@@ -36,6 +36,18 @@ namespace TeachNote_Backend.Controllers
             return subject;
         }
 
+        [HttpGet("department/{id}")]
+        public async Task<ActionResult<IEnumerable<Subjects>>> GetSubjectsint(int id)
+        {
+            var subjects = await _context.Subjects.Include(s => s.Department)
+                                            .Where(s => s.departmentId == id)
+                                            .ToListAsync();
+            if (subjects == null)
+            {
+                return NoContent();
+            }
+            return subjects;
+        }
         // POST: api/Subjects    tested succesfully
         [HttpPost]
         public async Task<ActionResult<Subjects>> PostSubject(Subjects subject)
