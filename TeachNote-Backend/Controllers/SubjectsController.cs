@@ -15,24 +15,31 @@ namespace TeachNote_Backend.Controllers
             _context = context;
         }
 
-        // GET: api/Subjects      tested succesfully
+        // GET: api/Subjects      tested successfully
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Subjects>>> GetSubjects()
         {
             return await _context.Subjects.Include(s => s.Department).ToListAsync();
         }
 
-       // GET: api/Subjects/dept/5
+        // GET: api/Subjects/dept/5      tested successfully
         [HttpGet("dept/{id}")]
         public async Task<ActionResult<IEnumerable<Subjects>>> GetSubjectsByDept(int id)
         {
-            return await _context.Subjects
+            subject = await _context.Subjects
                 .Where(s => s.departmentId == id)
                 .Include(s => s.Department)
                 .ToListAsync();
+
+            if (subjects == null)
+            {
+                return NoContent(new { message = "Subject not found for the specified department." });
+            }
+
+            return subject;
         }
 
-        // GET: api/Subjects/5     tested succesfully
+        // GET: api/Subjects/5     tested successfully
         [HttpGet("{id}")]
         public async Task<ActionResult<Subjects>> GetSubject(int id)
         {
@@ -41,8 +48,8 @@ namespace TeachNote_Backend.Controllers
                 .FirstOrDefaultAsync(s => s.id == id);
 
             if (subject == null)
-                return NotFound();
-
+                return NotFound(new { message = "Subject not found." });    //can also use  return NotFound("Subject not found.");
+                
             return subject;
         }
 
@@ -55,11 +62,11 @@ namespace TeachNote_Backend.Controllers
                                             .ToListAsync();
             if (subjects == null)
             {
-                return NoContent();
+                return NoContent(new { message = "Subject not found for the specified department." });
             }
             return subjects;
         }
-        // POST: api/Subjects    tested succesfully
+        // POST: api/Subjects    tested successfully
         [HttpPost]
         public async Task<ActionResult<Subjects>> PostSubject(Subjects subject)
         {
@@ -69,7 +76,7 @@ namespace TeachNote_Backend.Controllers
             return CreatedAtAction(nameof(GetSubject), new { id = subject.id }, subject);
         }
 
-        // PUT: api/Subjects/5       tested succesfully
+        // PUT: api/Subjects/5       tested successfully
         [HttpPut("{id}")]
         public async Task<IActionResult> PutSubject(int id, Subjects updatedSubject)
         {
@@ -92,7 +99,7 @@ namespace TeachNote_Backend.Controllers
 
             var subject = await _context.Subjects.FindAsync(id);
             if (subject == null)
-                return NotFound();
+                return NotFound(new { message = "Subject not found for the specified id." });
 
             // Update only fields that should change
             subject.name = updatedSubject.name;
@@ -105,13 +112,13 @@ namespace TeachNote_Backend.Controllers
             return NoContent();
         }
 
-        // DELETE: api/Subjects/5       tested succesfully
+        // DELETE: api/Subjects/5       tested successfully
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSubject(int id)
         {
             var subject = await _context.Subjects.FindAsync(id);
             if (subject == null)
-                return NotFound();
+                return NotFound(new { message = "Subject not found." });
 
             _context.Subjects.Remove(subject);
             await _context.SaveChangesAsync();
