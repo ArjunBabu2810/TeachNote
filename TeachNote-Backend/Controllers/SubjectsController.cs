@@ -26,14 +26,14 @@ namespace TeachNote_Backend.Controllers
         [HttpGet("dept/{id}")]
         public async Task<ActionResult<IEnumerable<Subjects>>> GetSubjectsByDept(int id)
         {
-            subject = await _context.Subjects
+            var subject = await _context.Subjects
                 .Where(s => s.departmentId == id)
                 .Include(s => s.Department)
                 .ToListAsync();
 
-            if (subjects == null)
+            if (subject == null)
             {
-                return NoContent(new { message = "Subject not found for the specified department." });
+                return NotFound(new { message = "Subject not found for the specified department." });
             }
 
             return subject;
@@ -49,7 +49,6 @@ namespace TeachNote_Backend.Controllers
 
             if (subject == null)
                 return NotFound(new { message = "Subject not found." });    //can also use  return NotFound("Subject not found.");
-                
             return subject;
         }
 
@@ -62,7 +61,7 @@ namespace TeachNote_Backend.Controllers
                                             .ToListAsync();
             if (subjects == null)
             {
-                return NoContent(new { message = "Subject not found for the specified department." });
+                return NotFound(new { message = "Subject not found for the specified department." });
             }
             return subjects;
         }

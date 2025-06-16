@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TeachNote-Backend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+92cbcaebcb8619b4883ec72c73dc460a203997e4")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+64249662f330ac5e825c6617d78ec11ec2e2f6ed")]
 [assembly: System.Reflection.AssemblyProductAttribute("TeachNote-Backend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TeachNote-Backend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

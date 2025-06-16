@@ -34,15 +34,15 @@ namespace TeachNote_Backend.Controllers
         [HttpGet("dept/{id}")]
         public async Task<ActionResult<IEnumerable<Notes>>> GetNoteByDept(int id)
         {
-            notes = await _context.Notes
+            var note = await _context.Notes
                                      .Where(n => n.Subjects.departmentId == id)
                                      .Include(n => n.Subjects)
                                      .ToListAsync();
             
-            if (notes == null)
+            if (note == null)
                 return NotFound(new { message = "Notes not found for specified department." });
 
-            return notes;
+            return note;
         }
 
         // ───────────────────────────────────────────────
