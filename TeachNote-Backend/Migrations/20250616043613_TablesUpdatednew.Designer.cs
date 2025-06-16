@@ -12,8 +12,8 @@ using TeachNote_Backend.Models;
 namespace TeachNote_Backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250612181010_Table")]
-    partial class Table
+    [Migration("20250616043613_TablesUpdatednew")]
+    partial class TablesUpdatednew
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
