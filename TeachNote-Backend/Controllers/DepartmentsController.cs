@@ -36,11 +36,18 @@ public class DepartmentsController : ControllerBase
 
     // POST: api/departments
     [HttpPost]
-    public async Task<ActionResult<Department>> PostDepartment(Department department)
+    public async Task<ActionResult<Department>> PostDepartment(Department department, int id)
     {
+
+        var exist = await _context.Departments.FindAsync(id);
+
+        if (exist != null)
+        {
+            return BadRequest(new { message = "Already exist departmet id" });
+        }
+
         _context.Departments.Add(department);
         await _context.SaveChangesAsync();
-
         return CreatedAtAction(nameof(GetDepartmentById), new { id = department.id }, department);
     }
 
@@ -73,23 +80,23 @@ public class DepartmentsController : ControllerBase
 
     // DELETE: api/departments/5
     [HttpDelete("{id}")]
-public async Task<ActionResult<Department>> DeleteDepartmentById(int id)
-{
-    var department = await _context.Departments.FindAsync(id);
-    if (department == null)
-        return NotFound();
+    public async Task<ActionResult<Department>> DeleteDepartmentById(int id)
+    {
+        var department = await _context.Departments.FindAsync(id);
+        if (department == null)
+            return NotFound();
 
-    // Check if any users or subjects are still using this department
-    bool hasUsers = await _context.Users.AnyAsync(u => u.departmentId == id);
-    bool hasSubjects = await _context.Subjects.AnyAsync(s => s.departmentId == id);
+        // Check if any users or subjects are still using this department
+        bool hasUsers = await _context.Users.AnyAsync(u => u.departmentId == id);
+        bool hasSubjects = await _context.Subjects.AnyAsync(s => s.departmentId == id);
 
-    if (hasUsers || hasSubjects)
-        return BadRequest("Cannot delete department. It is referenced by existing users or subjects.");
+        if (hasUsers || hasSubjects)
+            return BadRequest("Cannot delete department. It is referenced by existing users or subjects.");
 
-    _context.Departments.Remove(department);
-    await _context.SaveChangesAsync();
+        _context.Departments.Remove(department);
+        await _context.SaveChangesAsync();
 
-    return department;
-}
+        return department;
+    }
 
 }

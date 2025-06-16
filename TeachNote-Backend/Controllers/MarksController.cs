@@ -177,7 +177,7 @@ public async Task<ActionResult<object>> GetMarksByStudentAndSemester(int student
     }
 
     // PUT: api/marks/5
-    [HttpPut("{id}")]
+    [HttpPut("{id}")]   
     public async Task<IActionResult> PutMarks(int id, Marks mark)
     {
         if (id != mark.id)
