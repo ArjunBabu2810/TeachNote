@@ -1,6 +1,7 @@
 {
   "format": 1,
   "restore": {
+<<<<<<< HEAD
     "C:\\Users\\ashfa\\OneDrive\\Desktop\\TeachNote\\TeachNote-Backend\\TeachNote-Backend.csproj": {}
   },
   "projects": {
@@ -12,6 +13,19 @@
         "projectPath": "C:\\Users\\ashfa\\OneDrive\\Desktop\\TeachNote\\TeachNote-Backend\\TeachNote-Backend.csproj",
         "packagesPath": "C:\\Users\\ashfa\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\ashfa\\OneDrive\\Desktop\\TeachNote\\TeachNote-Backend\\obj\\",
+=======
+    "C:\\Users\\ARJUN\\Intership\\TeachNote\\teachnote-backend\\TeachNote-Backend.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\ARJUN\\Intership\\TeachNote\\teachnote-backend\\TeachNote-Backend.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\ARJUN\\Intership\\TeachNote\\teachnote-backend\\TeachNote-Backend.csproj",
+        "projectName": "TeachNote-Backend",
+        "projectPath": "C:\\Users\\ARJUN\\Intership\\TeachNote\\teachnote-backend\\TeachNote-Backend.csproj",
+        "packagesPath": "C:\\Users\\ARJUN\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\ARJUN\\Intership\\TeachNote\\teachnote-backend\\obj\\",
+>>>>>>> 4f964510f7a0455ad86fc1e6eab1e2151cf769b4
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\ashfa\\AppData\\Roaming\\NuGet\\NuGet.Config"

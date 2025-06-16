@@ -13,74 +13,125 @@ public class MarksController : ControllerBase
         _context = context;
     }
 
-
-    // GET: api/marks/student/5
+// GET: api/marks/studentid/3
     [HttpGet("student/{studentId}")]
-    public async Task<ActionResult<IEnumerable<object>>> GetMarksByStudentId(int studentId)
+    public async Task<ActionResult<object>> GetMarksByStudentId(int studentId)
     {
         var marks = await _context.Marks
             .Include(m => m.Subjects)
+            .Include(m => m.User)
+                .ThenInclude(u => u.Department) // Include department here
             .Where(m => m.userId == studentId)
-            .Select(m => new
-            {
-                SubjectName = m.Subjects.name,
-                Internal1 = m.internal1,
-                Internal2 = m.internal2,
-                External = m.external,
-                Total = m.internal1 + m.internal2 + m.external
-            })
             .ToListAsync();
 
         if (!marks.Any())
             return NotFound("No marks found for this student.");
 
-        return Ok(marks);
+        var student = marks.First().User;
+
+        return Ok(new
+        {
+            StudentId = student.id,
+            StudentName = student.name,
+            StudentEmail = student.email,
+            DepartmentId = student.departmentId,
+            DepartmentName = student.Department?.name, 
+            Marks = marks.Select(m => new
+            {
+                SubjectId = m.subjectId,
+                SubjectName = m.Subjects.name,
+                Semester = m.Subjects.semester,
+                Internal1 = m.internal1,
+                Internal2 = m.internal2,
+                External = m.external,
+                Total = m.internal1 + m.internal2 + m.external
+            }).ToList()
+        });
     }
-// GET: api/marks/subject/3
-[HttpGet("subject/{subjectId}")]
-public async Task<ActionResult<IEnumerable<object>>> GetMarksBySubjectId(int subjectId)
+    
+    [HttpGet("department/{departmentId}")]
+    public async Task<ActionResult<IEnumerable<object>>> GetMarksByDepartmentId(int departmentId)
+    {
+        Console.WriteLine("Marks fetching by department id");
+        var marks = await _context.Marks
+            .Include(m => m.Subjects)
+            .Include(m => m.User)
+                .ThenInclude(u => u.Department) // Include department here
+            .Where(m => m.User.departmentId == departmentId)
+            .ToListAsync();
+
+        if (!marks.Any())
+            return NotFound("No marks found for this department.");
+
+        var student = marks.First().User;
+        return marks;
+    }
+
+    // GET: api/marks/subject/3
+    [HttpGet("subject/{subjectId}")]
+public async Task<ActionResult<object>> GetMarksBySubjectId(int subjectId)
 {
     var marks = await _context.Marks
         .Include(m => m.User)
+        .Include(m => m.Subjects)
+            .ThenInclude(s => s.Department) // Include Department
         .Where(m => m.subjectId == subjectId)
-        .Select(m => new {
-            StudentName = m.User.name,
-            Internal1 = m.internal1,
-            Internal2 = m.internal2,
-            External = m.external,
-            Total = m.internal1 + m.internal2 + m.external
-        })
         .ToListAsync();
 
     if (!marks.Any())
         return NotFound("No marks found for this subject.");
 
-    return Ok(marks);
+    var subjectInfo = marks.First().Subjects;
+
+    var result = new
+    {
+        SubjectId = subjectId,
+        SubjectName = subjectInfo.name,
+        Semester = subjectInfo.semester,
+        DepartmentId = subjectInfo.departmentId,
+        DepartmentName = subjectInfo.Department?.name,
+        Students = marks.Select(m => new
+        {
+            StudentId = m.User.id,
+            StudentName = m.User.name,
+            StudentEmail = m.User.email,
+            Internal1 = m.internal1,
+            Internal2 = m.internal2,
+            External = m.external,
+            Total = m.internal1 + m.internal2 + m.external
+        }).ToList()
+    };
+
+    return Ok(result);
 }
-// GET: api/marks/student/5/semester/2
+
 [HttpGet("student/{studentId}/semester/{semesterNumber}")]
 public async Task<ActionResult<object>> GetMarksByStudentAndSemester(int studentId, int semesterNumber)
 {
     var marks = await _context.Marks
         .Include(m => m.Subjects)
-        .Where(m => m.userId == studentId && m.Subjects.semester == semesterNumber) // 🔄 changed here
-        .Select(m => new {
-            SubjectName = m.Subjects.name,
-            Internal1 = m.internal1,
-            Internal2 = m.internal2,
-            External = m.external,
-            Total = m.internal1 + m.internal2 + m.external
-        })
+        .Where(m => m.userId == studentId && m.Subjects.semester == semesterNumber)
         .ToListAsync();
 
     if (!marks.Any())
         return NotFound("No marks found for this student in the given semester.");
 
-    float semesterTotal = marks.Sum(m => m.Total);
+    float semesterTotal = marks.Sum(m => m.internal1 + m.internal2 + m.external);
 
     return Ok(new {
         Semester = semesterNumber,
-        Subjects = marks,
+        Subjects = marks.Select(m => new {
+            Subject = m.Subjects,    // ✅ full subject object
+            Mark = new {
+                m.id,
+                m.userId,
+                m.subjectId,
+                m.internal1,
+                m.internal2,
+                m.external,
+                Total = m.internal1 + m.internal2 + m.external
+            }
+        }),
         SemesterTotal = semesterTotal
     });
 }
@@ -88,12 +139,41 @@ public async Task<ActionResult<object>> GetMarksByStudentAndSemester(int student
 
 
     // POST: api/marks
-    [HttpPost]
+    // [HttpPost]
+    // public async Task<ActionResult<Marks>> PostMarks(Marks mark)
+    // {
+    //     _context.Marks.Add(mark);
+    //     await _context.SaveChangesAsync();
+    //     return CreatedAtAction(nameof(PostMarks), new { id = mark.id }, mark);
+    // }
     public async Task<ActionResult<Marks>> PostMarks(Marks mark)
     {
+        // Check if mark already exists for the given userId and subjectId
+        var existingMark = await _context.Marks
+            .FirstOrDefaultAsync(m => m.userId == mark.userId && m.subjectId == mark.subjectId);
+
+
+        if (existingMark != null)
+        {
+            // Update existing values
+            existingMark.internal1 = mark.internal1;
+            existingMark.internal2 = mark.internal2;
+            existingMark.external = mark.external;
+
+            await _context.SaveChangesAsync();
+            return Ok(existingMark); // return updated mark
+        }
+        var student = await _context.Users.FirstOrDefaultAsync(u => u.id == mark.userId);
+        var subject = await _context.Subjects.FirstOrDefaultAsync(s => s.id == mark.subjectId);
+
+        if (student==null || student.departmentId != subject.departmentId)
+        {
+            return BadRequest(new { message = "This student is not from your department" });
+        }
+        // If not found, insert new mark
         _context.Marks.Add(mark);
         await _context.SaveChangesAsync();
-        return CreatedAtAction(nameof(PostMarks), new { id = mark.id }, mark);
+        return CreatedAtAction(nameof(PostMarks), new { id = mark.id }, mark); // return newly created mark
     }
 
     // PUT: api/marks/5
