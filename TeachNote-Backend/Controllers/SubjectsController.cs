@@ -22,6 +22,16 @@ namespace TeachNote_Backend.Controllers
             return await _context.Subjects.Include(s => s.Department).ToListAsync();
         }
 
+       // GET: api/Subjects/dept/5
+        [HttpGet("dept/{id}")]
+        public async Task<ActionResult<IEnumerable<Subjects>>> GetSubjectsByDept(int id)
+        {
+            return await _context.Subjects
+                .Where(s => s.departmentId == id)
+                .Include(s => s.Department)
+                .ToListAsync();
+        }
+
         // GET: api/Subjects/5     tested succesfully
         [HttpGet("{id}")]
         public async Task<ActionResult<Subjects>> GetSubject(int id)

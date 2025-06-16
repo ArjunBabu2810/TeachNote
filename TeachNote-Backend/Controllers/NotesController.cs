@@ -30,6 +30,17 @@ namespace TeachNote_Backend.Controllers
         }
 
         // ───────────────────────────────────────────────
+        // GET: api/notes/dept/5     tested successfully
+        [HttpGet("dept/{id}")]
+        public async Task<ActionResult<IEnumerable<Notes>>> GetNoteByDept(int id)
+        {
+            return await _context.Notes
+                                     .Where(n => n.Subjects.departmentId == id)
+                                     .Include(n => n.Subjects)
+                                     .ToListAsync();
+        }
+
+        // ───────────────────────────────────────────────
         // GET: api/notes/5     tested successfully
         [HttpGet("{id:int}")]
         public async Task<ActionResult<Notes>> GetNote(int id)
