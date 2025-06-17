@@ -12,8 +12,8 @@ using TeachNote_Backend.Models;
 namespace TeachNote_Backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250616040913_Tableeemorni")]
-    partial class Tableeemorni
+    [Migration("20250617062208_seedAdmin")]
+    partial class seedAdmin
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,6 +40,13 @@ namespace TeachNote_Backend.Migrations
                     b.HasKey("id");
 
                     b.ToTable("Departments");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            name = "adminDepartment"
+                        });
                 });
 
             modelBuilder.Entity("TeachNote_Backend.Models.Marks", b =>
@@ -165,6 +172,17 @@ namespace TeachNote_Backend.Migrations
                     b.HasIndex("departmentId");
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            departmentId = 1,
+                            email = "admin@gmail.com",
+                            name = "admin",
+                            password = "$2a$11$4fDlR2V5kICabpxYaQVGx.f7G663bKMXdAKYm0b8GZlP1.uqNc1wG",
+                            role = "admin"
+                        });
                 });
 
             modelBuilder.Entity("TeachNote_Backend.Models.Marks", b =>

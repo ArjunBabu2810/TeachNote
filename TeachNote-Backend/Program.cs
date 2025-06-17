@@ -14,6 +14,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddControllers();
 
+
+
 // Add CORS before other services
 builder.Services.AddCors(options =>
 {
@@ -54,6 +56,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddAuthorization();
 var app = builder.Build();
+
+
 
 // Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())

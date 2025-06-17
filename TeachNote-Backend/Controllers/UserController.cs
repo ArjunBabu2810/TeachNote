@@ -99,7 +99,7 @@ public class UserController : ControllerBase
         var users = await _context.Users.Include(u => u.Department).Where(u => u.departmentId == id).ToListAsync();
         if (users == null)
         {
-            return NoContent();
+            return NotFound(new {message = "Found no users"});
         }
         return Ok(users);
     }

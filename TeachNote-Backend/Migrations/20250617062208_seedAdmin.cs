@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace TeachNote_Backend.Migrations
 {
     /// <inheritdoc />
-    public partial class TablesUpdatednew : Migration
+    public partial class seedAdmin : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -126,6 +126,16 @@ namespace TeachNote_Backend.Migrations
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.InsertData(
+                table: "Departments",
+                columns: new[] { "id", "name" },
+                values: new object[] { 1, "adminDepartment" });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "id", "departmentId", "email", "name", "password", "role" },
+                values: new object[] { 1, 1, "admin@gmail.com", "admin", "$2a$11$4fDlR2V5kICabpxYaQVGx.f7G663bKMXdAKYm0b8GZlP1.uqNc1wG", "admin" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Marks_subjectId",
