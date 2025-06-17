@@ -1,6 +1,7 @@
 {
   "format": 1,
   "restore": {
+<<<<<<< HEAD
     "C:\\Users\\ARJUN\\Intership\\TeachNote\\TeachNote-Backend\\TeachNote-Backend.csproj": {}
   },
   "projects": {
@@ -15,6 +16,32 @@
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\ARJUN\\AppData\\Roaming\\NuGet\\NuGet.Config"
+=======
+<<<<<<< HEAD
+    "C:\\Users\\enosh\\Desktop\\TeachNote\\TeachNote-Backend\\TeachNote-Backend.csproj": {}
+=======
+    "C:\\Users\\ashfa\\OneDrive\\Desktop\\TeachNote\\TeachNote-Backend\\TeachNote-Backend.csproj": {}
+>>>>>>> 64249662f330ac5e825c6617d78ec11ec2e2f6ed
+  },
+  "projects": {
+    "C:\\Users\\enosh\\Desktop\\TeachNote\\TeachNote-Backend\\TeachNote-Backend.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\enosh\\Desktop\\TeachNote\\TeachNote-Backend\\TeachNote-Backend.csproj",
+        "projectName": "TeachNote-Backend",
+<<<<<<< HEAD
+        "projectPath": "C:\\Users\\enosh\\Desktop\\TeachNote\\TeachNote-Backend\\TeachNote-Backend.csproj",
+        "packagesPath": "C:\\Users\\enosh\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\enosh\\Desktop\\TeachNote\\TeachNote-Backend\\obj\\",
+=======
+        "projectPath": "C:\\Users\\ashfa\\OneDrive\\Desktop\\TeachNote\\TeachNote-Backend\\TeachNote-Backend.csproj",
+        "packagesPath": "C:\\Users\\ashfa\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\ashfa\\OneDrive\\Desktop\\TeachNote\\TeachNote-Backend\\obj\\",
+>>>>>>> 64249662f330ac5e825c6617d78ec11ec2e2f6ed
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\enosh\\AppData\\Roaming\\NuGet\\NuGet.Config"
+>>>>>>> 3eaad2278a0152086ef02a55c5a278b73a7a5d0f
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -97,7 +124,7 @@
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
-              "version": "[6.6.2, )"
+              "version": "[9.0.1, )"
             },
             "System.IdentityModel.Tokens.Jwt": {
               "target": "Package",

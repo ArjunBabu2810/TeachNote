@@ -48,6 +48,9 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+// Add Swagger services
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 builder.Services.AddAuthorization();
 var app = builder.Build();
@@ -61,6 +64,14 @@ if (app.Environment.IsDevelopment())
 app.UseCors();
 app.UseStaticFiles();
 app.UseRouting();
+
+// Enable Swagger in development
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
 app.UseAuthentication();
 app.UseAuthorization();   // Fix typo here (Authorization, not Autherization)
 

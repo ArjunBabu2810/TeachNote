@@ -34,10 +34,15 @@ namespace TeachNote_Backend.Controllers
         [HttpGet("dept/{id}")]
         public async Task<ActionResult<IEnumerable<Notes>>> GetNoteByDept(int id)
         {
-            return await _context.Notes
+            var note = await _context.Notes
                                      .Where(n => n.Subjects.departmentId == id)
                                      .Include(n => n.Subjects)
                                      .ToListAsync();
+            
+            if (note == null)
+                return NotFound(new { message = "Notes not found for specified department." });
+
+            return note;
         }
 
         // ───────────────────────────────────────────────
@@ -49,7 +54,7 @@ namespace TeachNote_Backend.Controllers
                                      .Include(n => n.Subjects)
                                      .FirstOrDefaultAsync(n => n.id == id);
 
-            return note is null ? NotFound() : note;
+            return note is null ? NotFound(new { message = "Notes not found for specified id." }) : note;
         }
 
         [HttpGet("department/{id:int}")]
@@ -61,7 +66,7 @@ namespace TeachNote_Backend.Controllers
                                      .Where(n=>n.Subjects.departmentId==id)
                                      .ToListAsync();
             Console.WriteLine("Note id "+note[0].subjectId);
-            return note is null ? NotFound() : note;
+            return note is null ? NotFound(new { message = "Notes not found for specified department." }) : note;
         }
 
 
@@ -73,7 +78,7 @@ namespace TeachNote_Backend.Controllers
                                      .Where(n => n.userId == id)
                                      .ToListAsync();
 
-            return note is null ? NotFound() : note;
+            return note is null ? NotFound(new { message = "Notes not found for specified teacher." }) : note;
         }
 
         // ───────────────────────────────────────────────
@@ -140,7 +145,7 @@ namespace TeachNote_Backend.Controllers
         public async Task<IActionResult> DeleteNote(int id)
         {
             var note = await _context.Notes.FindAsync(id);
-            if (note is null) return NotFound();
+            if (note is null) return NotFound(new { message = "Notes not found with specified id." });
 
             // Optionally delete the physical file
             var physicalPath = Path.Combine(_env.WebRootPath, note.pdfFile);
@@ -203,6 +208,9 @@ namespace TeachNote_Backend.Controllers
                 query = query.Where(n => n.subjectId == subjectId.Value);
 
             var result = await query.ToListAsync();
+
+            if (result == null)
+                return NotFound(new { message = "Notes not found for specified filteration." });
 
             return Ok(result);
         }
