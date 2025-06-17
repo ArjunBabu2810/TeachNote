@@ -18,12 +18,20 @@ public class UserController : ControllerBase
     public async Task<ActionResult<List<User>>> GetUsers()
     {
         var users = await _context.Users.Include(u=>u.Department).ToListAsync();
-        return users;
+        if (users == null)
+        {
+            return BadRequest(new { message = "There are no users" });
+        }
+        return Ok(users);
     }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<User>> GetUserById(int id)
     {
+        if (string.IsNullOrWhiteSpace(id.ToString()))
+        {
+            return BadRequest(new { message = "Id cannot be null" });
+        }
         Console.WriteLine($"Fetching user by id {id}");
         var users = await _context.Users.Include(u=>u.Department).FirstOrDefaultAsync(u=>u.id==id);
         if (users == null)
@@ -31,7 +39,7 @@ public class UserController : ControllerBase
             return NoContent();
         }
         
-        return users;
+        return Ok(users);
     }
     
 
@@ -43,6 +51,11 @@ public class UserController : ControllerBase
         if (user == null)
         {
             return BadRequest(new { message = "Invalid user data" });
+        }
+        var existing = await _context.Users.FirstOrDefaultAsync(u=>u.email == user.email);
+        if (existing != null)
+        {
+            return BadRequest(new { message = "user already exist" });
         }
         var hashedPassword = BCrypt.Net.BCrypt.HashPassword(user.password);
         // var dept = await _context.Departments.FindAsync(user.departmentId);
@@ -60,16 +73,34 @@ public class UserController : ControllerBase
             role = user.role,
             departmentId = user.departmentId,
         };
-        _context.Users.Add(newUser);
-        await _context.SaveChangesAsync(); 
-        return Ok(new { message = "New user added succesfully " });
+        try
+        {
+            _context.Users.Add(newUser);
+            await _context.SaveChangesAsync();
+            return Ok(new { message = "New user added succesfully " });
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Error in inserting user : {e.Message}");
+            return StatusCode(500);
+
+        }
     }
 
 
     [HttpGet("bydepartment")]
     public async Task<ActionResult<List<User>>> GetUsersByDeparment(int id)
     {
+        var department = await _context.Departments.FirstOrDefaultAsync(d => d.id == id);
+        if (department == null)
+        {
+            return BadRequest(new { message = $"There no department with id : {id}" });
+    }
         var users = await _context.Users.Include(u => u.Department).Where(u => u.departmentId == id).ToListAsync();
+        if (users == null)
+        {
+            return NoContent();
+        }
         return Ok(users);
     }
 
@@ -124,7 +155,7 @@ public class UserController : ControllerBase
         {
             if (!BCrypt.Net.BCrypt.Verify(updatedUser.password, user.password))
             {
-                return BadRequest(new { message = "Enter Previous password correctly" });
+                return BadRequest(new { message = "Enter previous password correctly" });
             }
             user.password = BCrypt.Net.BCrypt.HashPassword(updatedUser.password);
             
