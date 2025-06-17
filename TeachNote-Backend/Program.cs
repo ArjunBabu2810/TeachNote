@@ -3,8 +3,9 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using TeachNote_Backend.Models;  // Import your AppDbContext namespace
+using TeachNote_Backend.Models;  
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -77,10 +78,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseAuthentication();
-app.UseAuthorization();   // Fix typo here (Authorization, not Autherization)
+app.UseAuthorization();   
 
-app.MapControllers();     // Use MapControllers, not UseMapControllers
-
+app.MapControllers(); 
 app.MapGet("/", () => "API is running!");
 app.MapGet("/test", () => "Test endpoint works!");
 

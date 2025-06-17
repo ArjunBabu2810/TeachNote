@@ -55,15 +55,16 @@ public class UserController : ControllerBase
         var existing = await _context.Users.FirstOrDefaultAsync(u=>u.email == user.email);
         if (existing != null)
         {
-            return BadRequest(new { message = "user already exist" });
+            Console.WriteLine($"Adding user : {existing.id} given id : {user.id}");
+            return BadRequest("user already exist");
         }
-        var hashedPassword = BCrypt.Net.BCrypt.HashPassword(user.password);
         // var dept = await _context.Departments.FindAsync(user.departmentId);
         var dept = await _context.Departments.FirstOrDefaultAsync(d => d.id == user.departmentId);
         if (dept == null)
         {
             return NotFound(new { message = "Department not found!" });
         }
+        var hashedPassword = BCrypt.Net.BCrypt.HashPassword(user.password);
         Console.WriteLine($"attempt to add user department={dept.id}");
         var newUser = new User
         {
