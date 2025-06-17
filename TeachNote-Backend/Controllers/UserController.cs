@@ -46,7 +46,7 @@ public class UserController : ControllerBase
         }
         var hashedPassword = BCrypt.Net.BCrypt.HashPassword(user.password);
         // var dept = await _context.Departments.FindAsync(user.departmentId);
-        var dept = await _context.Departments.AsNoTracking().FirstOrDefaultAsync(d => d.id == user.departmentId);
+        var dept = await _context.Departments.FirstOrDefaultAsync(d => d.id == user.departmentId);
         if (dept == null)
         {
             return NotFound(new { message = "Department not found!" });
