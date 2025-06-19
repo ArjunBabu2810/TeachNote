@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\ARJUN\\Intership\\TeachNote\\TeachNote-Backend\\TeachNote-Backend.csproj": {}
+    "C:\\Users\\Athira K Dinesan\\Desktop\\TeachNote_Internship\\TeachNote\\TeachNote-Backend\\TeachNote-Backend.csproj": {}
   },
   "projects": {
-    "C:\\Users\\ARJUN\\Intership\\TeachNote\\TeachNote-Backend\\TeachNote-Backend.csproj": {
+    "C:\\Users\\Athira K Dinesan\\Desktop\\TeachNote_Internship\\TeachNote\\TeachNote-Backend\\TeachNote-Backend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ARJUN\\Intership\\TeachNote\\TeachNote-Backend\\TeachNote-Backend.csproj",
+        "projectUniqueName": "C:\\Users\\Athira K Dinesan\\Desktop\\TeachNote_Internship\\TeachNote\\TeachNote-Backend\\TeachNote-Backend.csproj",
         "projectName": "TeachNote-Backend",
-        "projectPath": "C:\\Users\\ARJUN\\Intership\\TeachNote\\TeachNote-Backend\\TeachNote-Backend.csproj",
-        "packagesPath": "C:\\Users\\ARJUN\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ARJUN\\Intership\\TeachNote\\TeachNote-Backend\\obj\\",
+        "projectPath": "C:\\Users\\Athira K Dinesan\\Desktop\\TeachNote_Internship\\TeachNote\\TeachNote-Backend\\TeachNote-Backend.csproj",
+        "packagesPath": "C:\\Users\\Athira K Dinesan\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Athira K Dinesan\\Desktop\\TeachNote_Internship\\TeachNote\\TeachNote-Backend\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\ARJUN\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\Athira K Dinesan\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -123,7 +123,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.410/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.411/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
