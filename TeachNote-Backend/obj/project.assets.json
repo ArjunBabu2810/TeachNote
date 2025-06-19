@@ -10587,16 +10587,11 @@
     ]
   },
   "packageFolders": {
-<<<<<<< HEAD
     "C:\\Users\\ashfa\\.nuget\\packages\\": {}
-=======
-    "C:\\Users\\Athira K Dinesan\\.nuget\\packages\\": {}
->>>>>>> b30f996b00668dd223f896763961635a3a8d6a50
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-<<<<<<< HEAD
       "projectUniqueName": "C:\\Users\\ashfa\\OneDrive\\Desktop\\TeachNote\\TeachNote-Backend\\TeachNote-Backend.csproj",
       "projectName": "TeachNote-Backend",
       "projectPath": "C:\\Users\\ashfa\\OneDrive\\Desktop\\TeachNote\\TeachNote-Backend\\TeachNote-Backend.csproj",
@@ -10605,16 +10600,6 @@
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\ashfa\\AppData\\Roaming\\NuGet\\NuGet.Config"
-=======
-      "projectUniqueName": "C:\\Users\\Athira K Dinesan\\Desktop\\TeachNote_Internship\\TeachNote\\TeachNote-Backend\\TeachNote-Backend.csproj",
-      "projectName": "TeachNote-Backend",
-      "projectPath": "C:\\Users\\Athira K Dinesan\\Desktop\\TeachNote_Internship\\TeachNote\\TeachNote-Backend\\TeachNote-Backend.csproj",
-      "packagesPath": "C:\\Users\\Athira K Dinesan\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Athira K Dinesan\\Desktop\\TeachNote_Internship\\TeachNote\\TeachNote-Backend\\obj\\",
-      "projectStyle": "PackageReference",
-      "configFilePaths": [
-        "C:\\Users\\Athira K Dinesan\\AppData\\Roaming\\NuGet\\NuGet.Config"
->>>>>>> b30f996b00668dd223f896763961635a3a8d6a50
       ],
       "originalTargetFrameworks": [
         "net8.0"
@@ -10723,8 +10708,16 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.411/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.410/PortableRuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "Undefined",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Problem reading the cache file C:\\Users\\ashfa\\OneDrive\\Desktop\\TeachNote\\TeachNote-Backend\\obj\\project.nuget.cache : Invalid property identifier character: <. Path 'version', line 3, position 0."
+    }
+  ]
 }
