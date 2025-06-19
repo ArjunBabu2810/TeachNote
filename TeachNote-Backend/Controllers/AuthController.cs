@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -41,9 +42,11 @@ public class AuthController : ControllerBase
             }
             var role = user.role;
             Console.WriteLine("Login Success.");
-            Console.WriteLine(User.FindFirstValue(ClaimTypes.Email));
-            var token = _jwt.GenerateToken(request.Email, user.email);
-            return Ok(new { Token = token ,user.id,user.email,role,user.departmentId });
+            var token = _jwt.GenerateToken(user.email, user.role);
+            foreach (var claim in User.Claims){
+                Console.WriteLine($"Claim type:{claim.Type} value : {claim.Value}");
+            }
+            return Ok(new { Token = token, role });
             
         }
         catch (System.Exception ex)

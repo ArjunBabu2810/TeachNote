@@ -15,6 +15,7 @@ public class DepartmentsController : ControllerBase
     }
 
     // GET: api/departments
+    [Authorize(Roles = "admin/teacher")]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Department>>> GetDepartments()
     {

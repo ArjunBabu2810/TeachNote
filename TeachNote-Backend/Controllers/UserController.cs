@@ -1,3 +1,5 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
@@ -41,8 +43,18 @@ public class UserController : ControllerBase
         
         return Ok(users);
     }
-    
 
+    [Authorize(Roles = "admin,teacher,student")]
+    [HttpGet("profile")]
+    public IActionResult GetProfile()
+    {
+        Console.WriteLine($"User Email : {User.FindFirstValue(ClaimTypes.Email)}");
+        foreach (var item in User.Claims)
+        {
+            Console.WriteLine($"Claim type : {item.Type} value : {item.Value}");
+        }
+        return Ok();
+    }
     [HttpPost("add")]
     public  async Task<IActionResult> AddUser([FromBody] User user)
     {
