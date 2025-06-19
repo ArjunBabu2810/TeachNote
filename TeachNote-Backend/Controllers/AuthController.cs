@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
@@ -39,6 +41,7 @@ public class AuthController : ControllerBase
             }
             var role = user.role;
             Console.WriteLine("Login Success.");
+            Console.WriteLine(User.FindFirstValue(ClaimTypes.Email));
             var token = _jwt.GenerateToken(request.Email, user.email);
             return Ok(new { Token = token ,user.id,user.email,role,user.departmentId });
             

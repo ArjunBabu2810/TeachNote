@@ -14,6 +14,11 @@ namespace TeachNote_Backend.Models {
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<User>()
+                        .HasIndex(u => u.email)
+                        .IsUnique();
+
             modelBuilder.Entity<Department>().HasData(
                 new Department
                 {
@@ -21,6 +26,8 @@ namespace TeachNote_Backend.Models {
                     name = "adminDepartment"
                 }
             );
+
+
             modelBuilder.Entity<User>().HasData(
                 new User
                 {
