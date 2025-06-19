@@ -17,6 +17,8 @@ test.html
 # Ignore Rider project files
 .idea/
 
+# DLL files
+ *.dll
 # Ignore Visual Studio Code settings
 .vscode/
 
