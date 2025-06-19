@@ -53,7 +53,7 @@ public class UserController : ControllerBase
     {               
         var email = User.FindFirstValue(ClaimTypes.Email);
         Console.WriteLine($"User Email : {User.FindFirstValue(ClaimTypes.Email)}");
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.email == email);
+        var user = await _context.Users.Include(u=>u.Department).FirstOrDefaultAsync(u => u.email == email);
 
         if (user == null)
         {
