@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TeachNote_Backend.Models;
@@ -14,6 +15,7 @@ public class DepartmentsController : ControllerBase
     }
 
     // GET: api/departments
+    [Authorize(Roles = "admin/teacher")]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Department>>> GetDepartments()
     {

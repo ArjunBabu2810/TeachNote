@@ -5,7 +5,7 @@
 namespace TeachNote_Backend.Migrations
 {
     /// <inheritdoc />
-    public partial class Tableeemorni : Migration
+    public partial class seedAdmin2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

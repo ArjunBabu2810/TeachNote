@@ -25,7 +25,6 @@ public class JwtTokenService
         {
             new Claim(ClaimTypes.Email, email),
             new Claim(ClaimTypes.Role, role),
-            // new Claim(ClaimTypes.Department, departmentId)
         };
 
         var token = new JwtSecurityToken(

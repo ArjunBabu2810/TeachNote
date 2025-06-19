@@ -139,13 +139,13 @@ public async Task<ActionResult<object>> GetMarksByStudentAndSemester(int student
 
 
     // POST: api/marks
-    // [HttpPost]
     // public async Task<ActionResult<Marks>> PostMarks(Marks mark)
     // {
     //     _context.Marks.Add(mark);
     //     await _context.SaveChangesAsync();
     //     return CreatedAtAction(nameof(PostMarks), new { id = mark.id }, mark);
     // }
+    [HttpPost]
     public async Task<ActionResult<Marks>> PostMarks(Marks mark)
     {
         // Check if mark already exists for the given userId and subjectId

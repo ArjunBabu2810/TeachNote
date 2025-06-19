@@ -1,3 +1,5 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
@@ -41,8 +43,18 @@ public class UserController : ControllerBase
         
         return Ok(users);
     }
-    
 
+    [Authorize(Roles = "admin,teacher,student")]
+    [HttpGet("profile")]
+    public IActionResult GetProfile()
+    {
+        Console.WriteLine($"User Email : {User.FindFirstValue(ClaimTypes.Email)}");
+        foreach (var item in User.Claims)
+        {
+            Console.WriteLine($"Claim type : {item.Type} value : {item.Value}");
+        }
+        return Ok();
+    }
     [HttpPost("add")]
     public  async Task<IActionResult> AddUser([FromBody] User user)
     {
@@ -55,15 +67,16 @@ public class UserController : ControllerBase
         var existing = await _context.Users.FirstOrDefaultAsync(u=>u.email == user.email);
         if (existing != null)
         {
-            return BadRequest(new { message = "user already exist" });
+            Console.WriteLine($"Adding user : {existing.id} given id : {user.id}");
+            return BadRequest("user already exist");
         }
-        var hashedPassword = BCrypt.Net.BCrypt.HashPassword(user.password);
         // var dept = await _context.Departments.FindAsync(user.departmentId);
         var dept = await _context.Departments.FirstOrDefaultAsync(d => d.id == user.departmentId);
         if (dept == null)
         {
             return NotFound(new { message = "Department not found!" });
         }
+        var hashedPassword = BCrypt.Net.BCrypt.HashPassword(user.password);
         Console.WriteLine($"attempt to add user department={dept.id}");
         var newUser = new User
         {
@@ -99,7 +112,7 @@ public class UserController : ControllerBase
         var users = await _context.Users.Include(u => u.Department).Where(u => u.departmentId == id).ToListAsync();
         if (users == null)
         {
-            return NoContent();
+            return NotFound(new {message = "Found no users"});
         }
         return Ok(users);
     }

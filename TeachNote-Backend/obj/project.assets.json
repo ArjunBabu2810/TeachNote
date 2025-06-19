@@ -10587,16 +10587,11 @@
     ]
   },
   "packageFolders": {
-<<<<<<< HEAD
     "C:\\Users\\ARJUN\\.nuget\\packages\\": {}
-=======
-    "C:\\Users\\enosh\\.nuget\\packages\\": {}
->>>>>>> 3eaad2278a0152086ef02a55c5a278b73a7a5d0f
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-<<<<<<< HEAD
       "projectUniqueName": "C:\\Users\\ARJUN\\Intership\\TeachNote\\TeachNote-Backend\\TeachNote-Backend.csproj",
       "projectName": "TeachNote-Backend",
       "projectPath": "C:\\Users\\ARJUN\\Intership\\TeachNote\\TeachNote-Backend\\TeachNote-Backend.csproj",
@@ -10605,16 +10600,6 @@
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\ARJUN\\AppData\\Roaming\\NuGet\\NuGet.Config"
-=======
-      "projectUniqueName": "C:\\Users\\enosh\\Desktop\\TeachNote\\TeachNote-Backend\\TeachNote-Backend.csproj",
-      "projectName": "TeachNote-Backend",
-      "projectPath": "C:\\Users\\enosh\\Desktop\\TeachNote\\TeachNote-Backend\\TeachNote-Backend.csproj",
-      "packagesPath": "C:\\Users\\enosh\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\enosh\\Desktop\\TeachNote\\TeachNote-Backend\\obj\\",
-      "projectStyle": "PackageReference",
-      "configFilePaths": [
-        "C:\\Users\\enosh\\AppData\\Roaming\\NuGet\\NuGet.Config"
->>>>>>> 3eaad2278a0152086ef02a55c5a278b73a7a5d0f
       ],
       "originalTargetFrameworks": [
         "net8.0"
@@ -10726,21 +10711,5 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.410/PortableRuntimeIdentifierGraph.json"
       }
     }
-<<<<<<< HEAD
   }
-=======
-  },
-  "logs": [
-    {
-      "code": "Undefined",
-      "level": "Warning",
-      "warningLevel": 1,
-<<<<<<< HEAD
-      "message": "Problem reading the cache file C:\\Users\\enosh\\Desktop\\TeachNote\\TeachNote-Backend\\obj\\project.nuget.cache : Invalid property identifier character: <. Path 'version', line 3, position 0."
-=======
-      "message": "Problem reading the cache file C:\\Users\\ashfa\\OneDrive\\Desktop\\TeachNote\\TeachNote-Backend\\obj\\project.nuget.cache : Invalid property identifier character: <. Path 'version', line 3, position 0."
->>>>>>> 64249662f330ac5e825c6617d78ec11ec2e2f6ed
-    }
-  ]
->>>>>>> f1736639815300c4a397e30b94fad5a195dee7bb
 }
