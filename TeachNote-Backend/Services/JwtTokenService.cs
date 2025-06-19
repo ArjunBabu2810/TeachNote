@@ -1,9 +1,8 @@
-// using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.Extensions.Configuration;
-using System.IdentityModel.Tokens;
 using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 
 public class JwtTokenService
@@ -15,7 +14,7 @@ public class JwtTokenService
         _config = config;
     }
 
-    public string GenerateToken(string email, string role )
+    public string GenerateToken(string email, string role)
     {
         var jwtSettings = _config.GetSection("JwtSettings");
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]));
