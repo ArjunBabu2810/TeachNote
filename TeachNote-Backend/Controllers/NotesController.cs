@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using TeachNote_Backend.Models;
 using System.IO;
 using Microsoft.Extensions.Logging.Console;
+using TeachNote_Backend.DTOs; // ✅ Import the DTO namespace
 
 namespace TeachNote_Backend.Controllers
 {
@@ -84,34 +85,82 @@ namespace TeachNote_Backend.Controllers
         // ───────────────────────────────────────────────
         // POST: api/notes/upload          tested successfully
         // Receives a PDF via multipart/form-data
+
+        // [HttpPost("upload")]
+        // public async Task<IActionResult> UploadNote(
+        //     [FromForm] IFormFile pdfFile,
+        //     [FromForm] int subjectId,
+        //     [FromForm] int userId,
+        //     [FromForm] string description)
+
+        // {
+        //     Console.WriteLine($"user: ------------------{userId}");
+        //     Console.WriteLine($"{subjectId}");
+        //     Console.WriteLine($"{description}");
+        //     // 1️⃣ Validate file
+        //     if (pdfFile is null || pdfFile.Length == 0 || Path.GetExtension(pdfFile.FileName).ToLower() != ".pdf")
+        //         return BadRequest("Please upload a valid PDF file.");
+
+        //     // 🔐 Subject existence check
+        //     var subjectExists = await _context.Subjects.AnyAsync(s => s.id == subjectId);
+        //     if (!subjectExists)
+        //         return NotFound($"Subject with id {subjectId} not found.");
+
+        //     // 2️⃣ Ensure uploads folder
+        //     var webRoot = _env.WebRootPath ?? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+        //     var uploadsRoot = Path.Combine(webRoot, "uploads");
+        //     Directory.CreateDirectory(uploadsRoot);      // Creates both if missing
+
+        //     // var uploadsRoot = Path.Combine(_env.WebRootPath, "uploads");
+        //     // if (!Directory.Exists(uploadsRoot))
+        //     //     Directory.CreateDirectory(uploadsRoot);
+
+        //     // 3️⃣ Create unique filename
+        //     var fileName = $"{Guid.NewGuid()}.pdf";
+        //     var fullPath = Path.Combine(uploadsRoot, fileName);
+
+        //     // 4️⃣ Save file to disk
+        //     await using (var fs = new FileStream(fullPath, FileMode.Create))
+        //     {
+        //         await pdfFile.CopyToAsync(fs);
+        //     }
+        //     // 5️⃣ Persist note record
+        //     var note = new Notes
+        //     {
+        //         postedDate = DateTime.UtcNow,
+        //         userId = userId,
+        //         subjectId = subjectId,
+        //         description = description,
+        //         pdfFile = fileName // ← only stores "abc123.pdf"
+        //         // pdfFile = Path.Combine("uploads", fileName) // relative, e.g., uploads/abc.pdf
+        //     };
+
+        //     _context.Notes.Add(note);
+        //     await _context.SaveChangesAsync();
+
+        //     return CreatedAtAction(nameof(GetNote), new { id = note.id }, note);
+        // }
+
         [HttpPost("upload")]
-        public async Task<IActionResult> UploadNote(
-            [FromForm] IFormFile pdfFile,
-            [FromForm] int subjectId,
-            [FromForm] int userId,
-            [FromForm] string description)
-            
+        public async Task<IActionResult> UploadNote([FromForm] NoteUploadDto dto)
         {
-            Console.WriteLine($"user: ------------------{userId}");
-            Console.WriteLine($"{subjectId}");
-            Console.WriteLine($"{description}");
+            Console.WriteLine($"user: ------------------{dto.UserId}");
+            Console.WriteLine($"{dto.SubjectId}");
+            Console.WriteLine($"{dto.Description}");
+
             // 1️⃣ Validate file
-            if (pdfFile is null || pdfFile.Length == 0 || Path.GetExtension(pdfFile.FileName).ToLower() != ".pdf")
+            if (dto.PdfFile is null || dto.PdfFile.Length == 0 || Path.GetExtension(dto.PdfFile.FileName).ToLower() != ".pdf")
                 return BadRequest("Please upload a valid PDF file.");
 
             // 🔐 Subject existence check
-            var subjectExists = await _context.Subjects.AnyAsync(s => s.id == subjectId);
+            var subjectExists = await _context.Subjects.AnyAsync(s => s.id == dto.SubjectId);
             if (!subjectExists)
-                return NotFound($"Subject with id {subjectId} not found.");
+                return NotFound($"Subject with id {dto.SubjectId} not found.");
 
             // 2️⃣ Ensure uploads folder
             var webRoot = _env.WebRootPath ?? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
             var uploadsRoot = Path.Combine(webRoot, "uploads");
-            Directory.CreateDirectory(uploadsRoot);      // Creates both if missing
-
-            // var uploadsRoot = Path.Combine(_env.WebRootPath, "uploads");
-            // if (!Directory.Exists(uploadsRoot))
-            //     Directory.CreateDirectory(uploadsRoot);
+            Directory.CreateDirectory(uploadsRoot); // Creates both if missing
 
             // 3️⃣ Create unique filename
             var fileName = $"{Guid.NewGuid()}.pdf";
@@ -120,17 +169,17 @@ namespace TeachNote_Backend.Controllers
             // 4️⃣ Save file to disk
             await using (var fs = new FileStream(fullPath, FileMode.Create))
             {
-                await pdfFile.CopyToAsync(fs);
+                await dto.PdfFile.CopyToAsync(fs);
             }
+
             // 5️⃣ Persist note record
             var note = new Notes
             {
                 postedDate = DateTime.UtcNow,
-                userId = userId,
-                subjectId = subjectId,
-                description = description,
-                pdfFile = fileName // ← only stores "abc123.pdf"
-                // pdfFile = Path.Combine("uploads", fileName) // relative, e.g., uploads/abc.pdf
+                userId = dto.UserId,
+                subjectId = dto.SubjectId,
+                description = dto.Description,
+                pdfFile = fileName
             };
 
             _context.Notes.Add(note);
@@ -138,6 +187,7 @@ namespace TeachNote_Backend.Controllers
 
             return CreatedAtAction(nameof(GetNote), new { id = note.id }, note);
         }
+
 
         // ───────────────────────────────────────────────
         // DELETE: api/notes/5       tested successfully

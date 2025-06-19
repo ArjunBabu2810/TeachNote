@@ -10587,19 +10587,46 @@
     ]
   },
   "packageFolders": {
+<<<<<<< HEAD
     "C:\\Users\\ARJUN\\.nuget\\packages\\": {}
+=======
+<<<<<<< HEAD
+    "C:\\Users\\ashfa\\.nuget\\packages\\": {}
+=======
+    "C:\\Users\\Athira K Dinesan\\.nuget\\packages\\": {}
+>>>>>>> b30f996b00668dd223f896763961635a3a8d6a50
+>>>>>>> 24ae1d1829e3ade8a205dcbc3b2dfce42c1a9c9d
   },
   "project": {
     "version": "1.0.0",
     "restore": {
+<<<<<<< HEAD
       "projectUniqueName": "C:\\Users\\ARJUN\\Intership\\TeachNote\\TeachNote-Backend\\TeachNote-Backend.csproj",
+=======
+<<<<<<< HEAD
+      "projectUniqueName": "C:\\Users\\ashfa\\OneDrive\\Desktop\\TeachNote\\TeachNote-Backend\\TeachNote-Backend.csproj",
+      "projectName": "TeachNote-Backend",
+      "projectPath": "C:\\Users\\ashfa\\OneDrive\\Desktop\\TeachNote\\TeachNote-Backend\\TeachNote-Backend.csproj",
+      "packagesPath": "C:\\Users\\ashfa\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\ashfa\\OneDrive\\Desktop\\TeachNote\\TeachNote-Backend\\obj\\",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "C:\\Users\\ashfa\\AppData\\Roaming\\NuGet\\NuGet.Config"
+=======
+      "projectUniqueName": "C:\\Users\\Athira K Dinesan\\Desktop\\TeachNote_Internship\\TeachNote\\TeachNote-Backend\\TeachNote-Backend.csproj",
+>>>>>>> 24ae1d1829e3ade8a205dcbc3b2dfce42c1a9c9d
       "projectName": "TeachNote-Backend",
       "projectPath": "C:\\Users\\ARJUN\\Intership\\TeachNote\\TeachNote-Backend\\TeachNote-Backend.csproj",
       "packagesPath": "C:\\Users\\ARJUN\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\ARJUN\\Intership\\TeachNote\\TeachNote-Backend\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
+<<<<<<< HEAD
         "C:\\Users\\ARJUN\\AppData\\Roaming\\NuGet\\NuGet.Config"
+=======
+        "C:\\Users\\Athira K Dinesan\\AppData\\Roaming\\NuGet\\NuGet.Config"
+>>>>>>> b30f996b00668dd223f896763961635a3a8d6a50
+>>>>>>> 24ae1d1829e3ade8a205dcbc3b2dfce42c1a9c9d
       ],
       "originalTargetFrameworks": [
         "net8.0"
