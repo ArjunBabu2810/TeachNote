@@ -49,11 +49,11 @@ public class UserController : ControllerBase
 
     [Authorize(Roles = "admin,teacher,student")]
     [HttpGet("profile")]
-    public IActionResult GetProfile()
-    {
+    public async Task<ActionResult<User>> GetProfile()
+    {               
         var email = User.FindFirstValue(ClaimTypes.Email);
         Console.WriteLine($"User Email : {User.FindFirstValue(ClaimTypes.Email)}");
-        var user = _context.Users.FirstOrDefaultAsync(u => u.email == email);
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.email == email);
 
         if (user == null)
         {
