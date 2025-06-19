@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,10 +17,11 @@ public class UserController : ControllerBase
         _context = context;
     }
 
+    [Authorize(Roles = "admin")]
     [HttpGet("all")]
     public async Task<ActionResult<List<User>>> GetUsers()
     {
-        var users = await _context.Users.Include(u=>u.Department).ToListAsync();
+        var users = await _context.Users.Include(u => u.Department).ToListAsync();
         if (users == null)
         {
             return BadRequest(new { message = "There are no users" });
@@ -27,6 +29,7 @@ public class UserController : ControllerBase
         return Ok(users);
     }
 
+    [Authorize]
     [HttpGet("{id}")]
     public async Task<ActionResult<User>> GetUserById(int id)
     {
@@ -35,28 +38,38 @@ public class UserController : ControllerBase
             return BadRequest(new { message = "Id cannot be null" });
         }
         Console.WriteLine($"Fetching user by id {id}");
-        var users = await _context.Users.Include(u=>u.Department).FirstOrDefaultAsync(u=>u.id==id);
+        var users = await _context.Users.Include(u => u.Department).FirstOrDefaultAsync(u => u.id == id);
         if (users == null)
         {
             return NoContent();
         }
-        
+
         return Ok(users);
     }
 
     [Authorize(Roles = "admin,teacher,student")]
     [HttpGet("profile")]
-    public IActionResult GetProfile()
-    {
+    public async Task<ActionResult<User>> GetProfile()
+    {               
+        var email = User.FindFirstValue(ClaimTypes.Email);
         Console.WriteLine($"User Email : {User.FindFirstValue(ClaimTypes.Email)}");
-        foreach (var item in User.Claims)
+        var user = await _context.Users.Include(u=>u.Department).FirstOrDefaultAsync(u => u.email == email);
+
+        if (user == null)
         {
-            Console.WriteLine($"Claim type : {item.Type} value : {item.Value}");
+            return NotFound(new { message = "User Not Found" });
         }
-        return Ok();
+
+        return Ok(user);
+        // foreach (var item in User.Claims)
+        // {
+        //     Console.WriteLine($"Claim type : {item.Type} value : {item.Value}");
+        // }
     }
+
+    [Authorize(Roles = "admin")]
     [HttpPost("add")]
-    public  async Task<IActionResult> AddUser([FromBody] User user)
+    public async Task<IActionResult> AddUser([FromBody] User user)
     {
         Console.WriteLine($"attempt to add user");
         Console.WriteLine(user);
@@ -64,7 +77,7 @@ public class UserController : ControllerBase
         {
             return BadRequest(new { message = "Invalid user data" });
         }
-        var existing = await _context.Users.FirstOrDefaultAsync(u=>u.email == user.email);
+        var existing = await _context.Users.FirstOrDefaultAsync(u => u.email == user.email);
         if (existing != null)
         {
             Console.WriteLine($"Adding user : {existing.id} given id : {user.id}");
@@ -100,7 +113,7 @@ public class UserController : ControllerBase
         }
     }
 
-
+    [Authorize(Roles = "admin,teacher")]
     [HttpGet("bydepartment")]
     public async Task<ActionResult<List<User>>> GetUsersByDeparment(int id)
     {
@@ -108,15 +121,17 @@ public class UserController : ControllerBase
         if (department == null)
         {
             return BadRequest(new { message = $"There no department with id : {id}" });
-    }
+        }
         var users = await _context.Users.Include(u => u.Department).Where(u => u.departmentId == id).ToListAsync();
         if (users == null)
         {
-            return NotFound(new {message = "Found no users"});
+            return NotFound(new { message = "Found no users" });
         }
         return Ok(users);
     }
 
+
+    [Authorize(Roles = "admin")]
     [HttpPut("update/{id}")]
     public async Task<IActionResult> UpdateUser(int id, User updatedUser)
     {
@@ -124,7 +139,7 @@ public class UserController : ControllerBase
 
         if (user == null)
         {
-            return NotFound(new {message = "user not found"});
+            return NotFound(new { message = "user not found" });
         }
         try
         {
@@ -142,6 +157,7 @@ public class UserController : ControllerBase
         return Ok(new { message = "user updated" });
     }
 
+    [Authorize(Roles = "admin")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteUser(int id)
     {
@@ -155,6 +171,8 @@ public class UserController : ControllerBase
         return Ok(new { messsage = "User Deleted Successfully" });
     }
 
+
+    [Authorize]
     [HttpPost("updatePassword/{id}")]
     public async Task<IActionResult> UpdatePassword(int id, User updatedUser)
     {
@@ -162,7 +180,7 @@ public class UserController : ControllerBase
 
         if (user == null)
         {
-            return NotFound(new {message = "user not found"});
+            return NotFound(new { message = "user not found" });
         }
         try
         {
@@ -171,7 +189,7 @@ public class UserController : ControllerBase
                 return BadRequest(new { message = "Enter previous password correctly" });
             }
             user.password = BCrypt.Net.BCrypt.HashPassword(updatedUser.password);
-            
+
             await _context.SaveChangesAsync();
         }
         catch (Exception ex)
@@ -181,6 +199,8 @@ public class UserController : ControllerBase
         }
         return Ok(new { message = "user updated" });
     }
+
+    [Authorize]
     [HttpGet("test")]
     public IActionResult Test()
     {
