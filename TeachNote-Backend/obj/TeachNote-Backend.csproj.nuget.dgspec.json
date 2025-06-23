@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\ashfa\\OneDrive\\Desktop\\TeachNote\\TeachNote-Backend\\TeachNote-Backend.csproj": {}
+    "C:\\Users\\enosh\\Desktop\\TeachNote\\TeachNote-Backend\\TeachNote-Backend.csproj": {}
   },
   "projects": {
-    "C:\\Users\\ashfa\\OneDrive\\Desktop\\TeachNote\\TeachNote-Backend\\TeachNote-Backend.csproj": {
+    "C:\\Users\\enosh\\Desktop\\TeachNote\\TeachNote-Backend\\TeachNote-Backend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ashfa\\OneDrive\\Desktop\\TeachNote\\TeachNote-Backend\\TeachNote-Backend.csproj",
+        "projectUniqueName": "C:\\Users\\enosh\\Desktop\\TeachNote\\TeachNote-Backend\\TeachNote-Backend.csproj",
         "projectName": "TeachNote-Backend",
-        "projectPath": "C:\\Users\\ashfa\\OneDrive\\Desktop\\TeachNote\\TeachNote-Backend\\TeachNote-Backend.csproj",
-        "packagesPath": "C:\\Users\\ashfa\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ashfa\\OneDrive\\Desktop\\TeachNote\\TeachNote-Backend\\obj\\",
+        "projectPath": "C:\\Users\\enosh\\Desktop\\TeachNote\\TeachNote-Backend\\TeachNote-Backend.csproj",
+        "packagesPath": "C:\\Users\\enosh\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\enosh\\Desktop\\TeachNote\\TeachNote-Backend\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\ashfa\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\enosh\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"

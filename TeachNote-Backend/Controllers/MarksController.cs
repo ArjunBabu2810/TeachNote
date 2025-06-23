@@ -1,9 +1,12 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 using TeachNote_Backend.Models;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize(Roles = "teacher,student")] // ✅ GLOBAL: only teacher & student can access this controller
 public class MarksController : ControllerBase
 {
     private readonly AppDbContext _context;
@@ -13,21 +16,42 @@ public class MarksController : ControllerBase
         _context = context;
     }
 
-// GET: api/marks/studentid/3
+    private string? GetUserEmail() => User.FindFirst(ClaimTypes.Email)?.Value;
+    private string? GetUserRole() => User.FindFirst(ClaimTypes.Role)?.Value;
+
+    // ✅ GET marks by studentId
     [HttpGet("student/{studentId}")]
     public async Task<ActionResult<object>> GetMarksByStudentId(int studentId)
     {
+        var email = GetUserEmail();
+        var role = GetUserRole();
+
+        if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(role))
+            return Unauthorized("Invalid token.");
+
+        var student = await _context.Users.Include(u => u.Department).FirstOrDefaultAsync(u => u.id == studentId);
+        if (student == null)
+            return NotFound("Student not found.");
+
+        if (role == "teacher")
+        {
+            var teacher = await _context.Users.FirstOrDefaultAsync(u => u.email == email);
+            if (teacher == null || teacher.departmentId != student.departmentId)
+                return Forbid("Teachers can only access marks of students in their department.");
+        }
+        else if (role == "student")
+        {
+            if (student.email != email)
+                return Forbid("Students can only access their own marks.");
+        }
+
         var marks = await _context.Marks
             .Include(m => m.Subjects)
-            .Include(m => m.User)
-                .ThenInclude(u => u.Department) // Include department here
             .Where(m => m.userId == studentId)
             .ToListAsync();
 
         if (!marks.Any())
             return NotFound("No marks found for this student.");
-
-        var student = marks.First().User;
 
         return Ok(new
         {
@@ -35,7 +59,7 @@ public class MarksController : ControllerBase
             StudentName = student.name,
             StudentEmail = student.email,
             DepartmentId = student.departmentId,
-            DepartmentName = student.Department?.name, 
+            DepartmentName = student.Department?.name,
             Marks = marks.Select(m => new
             {
                 SubjectId = m.subjectId,
@@ -45,176 +69,188 @@ public class MarksController : ControllerBase
                 Internal2 = m.internal2,
                 External = m.external,
                 Total = m.internal1 + m.internal2 + m.external
-            }).ToList()
+            })
         });
     }
-    
-    [HttpGet("department/{departmentId}")]
-    public async Task<ActionResult<IEnumerable<object>>> GetMarksByDepartmentId(int departmentId)
+
+    // ✅ GET marks by subjectId — teacher only
+    [Authorize(Roles = "teacher")]
+    [HttpGet("subject/{subjectId}")]
+    public async Task<ActionResult<object>> GetMarksBySubjectId(int subjectId)
     {
-        Console.WriteLine("Marks fetching by department id");
+        var email = GetUserEmail();
+        var role = GetUserRole();
+
+        if (string.IsNullOrEmpty(email) || role != "teacher")
+            return Unauthorized("Invalid token or role.");
+
+        var subject = await _context.Subjects.Include(s => s.Department).FirstOrDefaultAsync(s => s.id == subjectId);
+        if (subject == null)
+            return NotFound("Subject not found.");
+
+        var teacher = await _context.Users.FirstOrDefaultAsync(u => u.email == email);
+        if (teacher == null || teacher.departmentId != subject.departmentId)
+            return Forbid("Teachers can only access subjects in their department.");
+
         var marks = await _context.Marks
-            .Include(m => m.Subjects)
             .Include(m => m.User)
-                .ThenInclude(u => u.Department) // Include department here
-            .Where(m => m.User.departmentId == departmentId)
+            .Include(m => m.Subjects)
+            .Where(m => m.subjectId == subjectId)
             .ToListAsync();
 
         if (!marks.Any())
-            return NotFound("No marks found for this department.");
+            return NotFound("No marks found for this subject.");
 
-        var student = marks.First().User;
-        return marks;
+        return Ok(new
+        {
+            SubjectId = subject.id,
+            SubjectName = subject.name,
+            Semester = subject.semester,
+            DepartmentId = subject.departmentId,
+            DepartmentName = subject.Department?.name,
+            Students = marks.Select(m => new
+            {
+                StudentId = m.User.id,
+                StudentName = m.User.name,
+                StudentEmail = m.User.email,
+                Internal1 = m.internal1,
+                Internal2 = m.internal2,
+                External = m.external,
+                Total = m.internal1 + m.internal2 + m.external
+            })
+        });
     }
 
-    // GET: api/marks/subject/3
-    [HttpGet("subject/{subjectId}")]
-public async Task<ActionResult<object>> GetMarksBySubjectId(int subjectId)
-{
-    var marks = await _context.Marks
-        .Include(m => m.User)
-        .Include(m => m.Subjects)
-            .ThenInclude(s => s.Department) // Include Department
-        .Where(m => m.subjectId == subjectId)
-        .ToListAsync();
-
-    if (!marks.Any())
-        return NotFound("No marks found for this subject.");
-
-    var subjectInfo = marks.First().Subjects;
-
-    var result = new
+    // ✅ GET marks by student + semester — teacher & student
+    [HttpGet("student/{studentId}/semester/{semesterNumber}")]
+    public async Task<ActionResult<object>> GetMarksByStudentAndSemester(int studentId, int semesterNumber)
     {
-        SubjectId = subjectId,
-        SubjectName = subjectInfo.name,
-        Semester = subjectInfo.semester,
-        DepartmentId = subjectInfo.departmentId,
-        DepartmentName = subjectInfo.Department?.name,
-        Students = marks.Select(m => new
+        var email = GetUserEmail();
+        var role = GetUserRole();
+
+        if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(role))
+            return Unauthorized("Invalid token.");
+
+        var student = await _context.Users.Include(u => u.Department).FirstOrDefaultAsync(u => u.id == studentId);
+        if (student == null)
+            return NotFound("Student not found.");
+
+        if (role == "teacher")
         {
-            StudentId = m.User.id,
-            StudentName = m.User.name,
-            StudentEmail = m.User.email,
-            Internal1 = m.internal1,
-            Internal2 = m.internal2,
-            External = m.external,
-            Total = m.internal1 + m.internal2 + m.external
-        }).ToList()
-    };
+            var teacher = await _context.Users.FirstOrDefaultAsync(u => u.email == email);
+            if (teacher == null || teacher.departmentId != student.departmentId)
+                return Forbid("Teachers can only access marks of students in their department.");
+        }
+        else if (role == "student")
+        {
+            if (student.email != email)
+                return Forbid("Students can only access their own marks.");
+        }
 
-    return Ok(result);
-}
+        var marks = await _context.Marks
+            .Include(m => m.Subjects)
+            .Where(m => m.userId == studentId && m.Subjects.semester == semesterNumber)
+            .ToListAsync();
 
-[HttpGet("student/{studentId}/semester/{semesterNumber}")]
-public async Task<ActionResult<object>> GetMarksByStudentAndSemester(int studentId, int semesterNumber)
-{
-    var marks = await _context.Marks
-        .Include(m => m.Subjects)
-        .Where(m => m.userId == studentId && m.Subjects.semester == semesterNumber)
-        .ToListAsync();
+        if (!marks.Any())
+            return NotFound("No marks found for this student in this semester.");
 
-    if (!marks.Any())
-        return NotFound("No marks found for this student in the given semester.");
+        float semesterTotal = marks.Sum(m => m.internal1 + m.internal2 + m.external);
 
-    float semesterTotal = marks.Sum(m => m.internal1 + m.internal2 + m.external);
+        return Ok(new
+        {
+            Semester = semesterNumber,
+            Subjects = marks.Select(m => new
+            {
+                Subject = m.Subjects,
+                Mark = new
+                {
+                    m.id,
+                    m.userId,
+                    m.subjectId,
+                    m.internal1,
+                    m.internal2,
+                    m.external,
+                    Total = m.internal1 + m.internal2 + m.external
+                }
+            }),
+            SemesterTotal = semesterTotal
+        });
+    }
 
-    return Ok(new {
-        Semester = semesterNumber,
-        Subjects = marks.Select(m => new {
-            Subject = m.Subjects,    // ✅ full subject object
-            Mark = new {
-                m.id,
-                m.userId,
-                m.subjectId,
-                m.internal1,
-                m.internal2,
-                m.external,
-                Total = m.internal1 + m.internal2 + m.external
-            }
-        }),
-        SemesterTotal = semesterTotal
-    });
-}
-
-
-
-    // POST: api/marks
-    // public async Task<ActionResult<Marks>> PostMarks(Marks mark)
-    // {
-    //     _context.Marks.Add(mark);
-    //     await _context.SaveChangesAsync();
-    //     return CreatedAtAction(nameof(PostMarks), new { id = mark.id }, mark);
-    // }
+    // ✅ POST: add/update mark — teacher only
+    [Authorize(Roles = "teacher")]
     [HttpPost]
     public async Task<ActionResult<Marks>> PostMarks(Marks mark)
     {
-        // Check if mark already exists for the given userId and subjectId
+        var email = GetUserEmail();
+        var role = GetUserRole();
+
+        if (string.IsNullOrEmpty(email) || role != "teacher")
+            return Unauthorized("Invalid token or role.");
+
+        var student = await _context.Users.FirstOrDefaultAsync(u => u.id == mark.userId);
+        var subject = await _context.Subjects.FirstOrDefaultAsync(s => s.id == mark.subjectId);
+
+        if (student == null || subject == null)
+            return BadRequest("Invalid student or subject.");
+
+        var teacher = await _context.Users.FirstOrDefaultAsync(u => u.email == email);
+        if (teacher == null || teacher.departmentId != student.departmentId || teacher.departmentId != subject.departmentId)
+            return Forbid("Teachers can only add marks for students and subjects in their department.");
+
         var existingMark = await _context.Marks
             .FirstOrDefaultAsync(m => m.userId == mark.userId && m.subjectId == mark.subjectId);
 
-
         if (existingMark != null)
         {
-            // Update existing values
             existingMark.internal1 = mark.internal1;
             existingMark.internal2 = mark.internal2;
             existingMark.external = mark.external;
 
             await _context.SaveChangesAsync();
-            return Ok(existingMark); // return updated mark
+            return Ok(existingMark);
         }
-        var student = await _context.Users.FirstOrDefaultAsync(u => u.id == mark.userId);
-        var subject = await _context.Subjects.FirstOrDefaultAsync(s => s.id == mark.subjectId);
 
-        if (student==null || student.departmentId != subject.departmentId)
-        {
-            return BadRequest(new { message = "This student is not from your department" });
-        }
-        // If not found, insert new mark
         _context.Marks.Add(mark);
         await _context.SaveChangesAsync();
-        return CreatedAtAction(nameof(PostMarks), new { id = mark.id }, mark); // return newly created mark
+        return CreatedAtAction(nameof(PostMarks), new { id = mark.id }, mark);
     }
 
-    // PUT: api/marks/5
-    [HttpPut("{id}")]   
-    public async Task<IActionResult> PutMarks(int id, Marks mark)
-    {
-        if (id != mark.id)
-        {
-            return BadRequest("ID mismatch.");
-        }
+    // ✅ DELETE: Teacher only
+[Authorize(Roles = "teacher")]
+[HttpDelete("{id}")]
+public async Task<ActionResult<Marks>> DeleteMarks(int id)
+{
+    var email = GetUserEmail();
+    var role = GetUserRole();
 
-        _context.Entry(mark).State = EntityState.Modified;
+    if (string.IsNullOrEmpty(email) || role != "teacher")
+        return Unauthorized("Invalid token or role.");
 
-        try
-        {
-            await _context.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!_context.Marks.Any(m => m.id == id))
-            {
-                return NotFound("Mark not found.");
-            }
-            throw;
-        }
+    var mark = await _context.Marks
+        .Include(m => m.User)
+        .Include(m => m.Subjects)
+        .FirstOrDefaultAsync(m => m.id == id);
 
-        return NoContent();
-    }
+    if (mark == null)
+        return NotFound("Mark not found.");
 
-    // DELETE: api/marks/5
-    [HttpDelete("{id}")]
-    public async Task<ActionResult<Marks>> DeleteMarks(int id)
-    {
-        var mark = await _context.Marks.FindAsync(id);
-        if (mark == null)
-        {
-            return NotFound("Mark not found.");
-        }
+    var teacher = await _context.Users.FirstOrDefaultAsync(u => u.email == email);
 
-        _context.Marks.Remove(mark);
-        await _context.SaveChangesAsync();
-        return mark;
-    }
+    if (teacher == null)
+        return Unauthorized("Teacher not found.");
+
+    // ✅ Check teacher's department matches both student and subject
+    if (teacher.departmentId != mark.User.departmentId || teacher.departmentId != mark.Subjects.departmentId)
+        return Forbid("Teachers can only delete marks for students and subjects in their department.");
+
+    _context.Marks.Remove(mark);
+    await _context.SaveChangesAsync();
+
+    return Ok(mark);
+}
+
+
+    // ✅ No PUT or DELETE: not allowed for teacher/student
 }
