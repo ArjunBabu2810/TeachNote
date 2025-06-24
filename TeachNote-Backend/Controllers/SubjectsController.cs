@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TeachNote_Backend.Models;
+using System.Security.Claims;
+
 
 namespace TeachNote_Backend.Controllers
 {
@@ -22,12 +24,15 @@ namespace TeachNote_Backend.Controllers
             return await _context.Subjects.Include(s => s.Department).ToListAsync();
         }
 
-        // GET: api/Subjects/dept/5      tested successfully
-        [HttpGet("dept/{id}")]
-        public async Task<ActionResult<IEnumerable<Subjects>>> GetSubjectsByDept(int id)
+        // GET: api/Subjects/dept      tested successfully
+        [HttpGet("dept")]
+        public async Task<ActionResult<IEnumerable<Subjects>>> GetSubjectsByDept()
         {
+            var email = User.FindFirstValue(ClaimTypes.Email);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.email == email);
+            var dId = user.departmentId;
             var subject = await _context.Subjects
-                .Where(s => s.departmentId == id)
+                .Where(s => s.departmentId == dId)
                 .Include(s => s.Department)
                 .ToListAsync();
 
@@ -52,19 +57,20 @@ namespace TeachNote_Backend.Controllers
             return subject;
         }
 
-        [HttpGet("department/{id}")]
-        public async Task<ActionResult<IEnumerable<Subjects>>> GetSubjectsByDepartment(int id)
-        {
-            Console.WriteLine($"Subject fetch by department id :{id}");
-            var subjects = await _context.Subjects.Include(s => s.Department)
-                                            .Where(s => s.departmentId == id)
-                                            .ToListAsync();
-            if (subjects == null)
-            {
-                return NotFound(new { message = "Subject not found for the specified department." });
-            }
-            return subjects;
-        }
+        // [HttpGet("department/{id}")]
+        // public async Task<ActionResult<IEnumerable<Subjects>>> GetSubjectsByDepartment(int id)
+        // {
+        //     Console.WriteLine($"Subject fetch by department id :{id}");
+        //     var subjects = await _context.Subjects.Include(s => s.Department)
+        //                                     .Where(s => s.departmentId == id)
+        //                                     .ToListAsync();
+        //     if (subjects == null)
+        //     {
+        //         return NotFound(new { message = "Subject not found for the specified department." });
+        //     }
+        //     return subjects;
+        // }
+
         // POST: api/Subjects    tested successfully
         [HttpPost]
         public async Task<ActionResult<Subjects>> PostSubject(Subjects subject)

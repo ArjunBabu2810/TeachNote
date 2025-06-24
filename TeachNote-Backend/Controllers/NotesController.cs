@@ -4,6 +4,8 @@ using TeachNote_Backend.Models;
 using System.IO;
 using Microsoft.Extensions.Logging.Console;
 using TeachNote_Backend.DTOs; // ✅ Import the DTO namespace
+using System.Security.Claims;
+
 
 namespace TeachNote_Backend.Controllers
 {
@@ -31,12 +33,15 @@ namespace TeachNote_Backend.Controllers
         }
 
         // ───────────────────────────────────────────────
-        // GET: api/notes/dept/5     tested successfully
-        [HttpGet("dept/{id}")]
-        public async Task<ActionResult<IEnumerable<Notes>>> GetNoteByDept(int id)
+        // GET: api/notes/dept     tested successfully
+        [HttpGet("dept")]
+        public async Task<ActionResult<IEnumerable<Notes>>> GetNoteByDept()
         {
+            var email = User.FindFirstValue(ClaimTypes.Email);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.email == email);
+            var dId = user.departmentId;
             var note = await _context.Notes
-                                     .Where(n => n.Subjects.departmentId == id)
+                                     .Where(n => n.Subjects.departmentId == dId)
                                      .Include(n => n.Subjects)
                                      .ToListAsync();
             
@@ -58,17 +63,17 @@ namespace TeachNote_Backend.Controllers
             return note is null ? NotFound(new { message = "Notes not found for specified id." }) : note;
         }
 
-        [HttpGet("department/{id:int}")]
-        public async Task<ActionResult<IEnumerable<Notes>>> GetNoteByDepartment(int id)
-        {
-            Console.WriteLine($"Department wise note fetching:{id}");
-            var note = await _context.Notes
-                                     .Include(n => n.Subjects)
-                                     .Where(n=>n.Subjects.departmentId==id)
-                                     .ToListAsync();
-            Console.WriteLine("Note id "+note[0].subjectId);
-            return note is null ? NotFound(new { message = "Notes not found for specified department." }) : note;
-        }
+        // [HttpGet("department/{id:int}")]
+        // public async Task<ActionResult<IEnumerable<Notes>>> GetNoteByDepartment(int id)
+        // {
+        //     Console.WriteLine($"Department wise note fetching:{id}");
+        //     var note = await _context.Notes
+        //                              .Include(n => n.Subjects)
+        //                              .Where(n=>n.Subjects.departmentId==id)
+        //                              .ToListAsync();
+        //     Console.WriteLine("Note id "+note[0].subjectId);
+        //     return note is null ? NotFound(new { message = "Notes not found for specified department." }) : note;
+        // }
 
 
         [HttpGet("teacher/{id:int}")]
@@ -144,7 +149,7 @@ namespace TeachNote_Backend.Controllers
         [HttpPost("upload")]
         public async Task<IActionResult> UploadNote([FromForm] NoteUploadDto dto)
         {
-            Console.WriteLine($"user: ------------------{dto.UserId}");
+            // Console.WriteLine($"user: ------------------{dto.UserId}");
             Console.WriteLine($"{dto.SubjectId}");
             Console.WriteLine($"{dto.Description}");
 
@@ -176,11 +181,17 @@ namespace TeachNote_Backend.Controllers
             var note = new Notes
             {
                 postedDate = DateTime.UtcNow,
-                userId = dto.UserId,
                 subjectId = dto.SubjectId,
                 description = dto.Description,
                 pdfFile = fileName
             };
+
+            var email = User.FindFirstValue(ClaimTypes.Email);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.email == email);
+            if (user == null)
+            return Unauthorized("Invalid user."); // Handle null case
+
+            note.userId = user.id;
 
             _context.Notes.Add(note);
             await _context.SaveChangesAsync();
