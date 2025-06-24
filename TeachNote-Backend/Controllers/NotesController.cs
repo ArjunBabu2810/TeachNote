@@ -146,6 +146,7 @@ namespace TeachNote_Backend.Controllers
         //     return CreatedAtAction(nameof(GetNote), new { id = note.id }, note);
         // }
 
+        [Authorize(Roles = "admin,teacher")]
         [HttpPost("upload")]
         public async Task<IActionResult> UploadNote([FromForm] NoteUploadDto dto)
         {
@@ -202,6 +203,8 @@ namespace TeachNote_Backend.Controllers
 
         // ───────────────────────────────────────────────
         // DELETE: api/notes/5       tested successfully
+
+        [Authorize(Roles = "admin,teacher")]
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteNote(int id)
         {
