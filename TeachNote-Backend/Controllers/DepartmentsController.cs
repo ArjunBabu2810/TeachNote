@@ -58,13 +58,15 @@ public async Task<ActionResult<IEnumerable<Department>>> GetDepartments()
     // ✅ Consider adding [Authorize(Roles = "admin")] for sensitive actions
     [Authorize(Roles = "admin")]
     [HttpPost]
-    public async Task<ActionResult<Department>> PostDepartment(Department department, int id)
+    public async Task<ActionResult<Department>> PostDepartment(Department department)
     {
-        var exist = await _context.Departments.FindAsync(id);
+        var exists = await _context.Departments
+                               .FirstOrDefaultAsync(d => d.name == department.name);
+
 
         if (exist != null)
         {
-            return BadRequest(new { message = "Department ID already exists." });
+            return BadRequest(new { message = "Department name already exists." });
         }
 
         _context.Departments.Add(department);
