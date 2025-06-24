@@ -81,7 +81,7 @@ public class UserController : ControllerBase
         if (existing != null)
         {
             Console.WriteLine($"Adding user : {existing.id} given id : {user.id}");
-            return BadRequest("user already exist");
+            return BadRequest(new {message = "user already exist"});
         }
         // var dept = await _context.Departments.FindAsync(user.departmentId);
         var dept = await _context.Departments.FirstOrDefaultAsync(d => d.id == user.departmentId);
@@ -173,10 +173,11 @@ public class UserController : ControllerBase
 
 
     [Authorize]
-    [HttpPost("updatePassword/{id}")]
-    public async Task<IActionResult> UpdatePassword(int id, User updatedUser)
+    [HttpPost("updatePassword")]
+    public async Task<IActionResult> UpdatePassword( User updatedUser)
     {
-        var user = await _context.Users.FindAsync(id);
+        var email = User.FindFirstValue(ClaimTypes.Email);   
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.email == email);
 
         if (user == null)
         {

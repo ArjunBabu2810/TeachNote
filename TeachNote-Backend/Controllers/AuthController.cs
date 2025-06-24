@@ -38,7 +38,7 @@ public class AuthController : ControllerBase
             var user = await _context.Users.FirstOrDefaultAsync(u => u.email == request.Email);
             if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.password))
             {
-                return Unauthorized(new {message = "Invalid Credentials !"});
+                return BadRequest(new {message = "Invalid Credentials !"});
             }
             var role = user.role;
             Console.WriteLine("Login Success.");
