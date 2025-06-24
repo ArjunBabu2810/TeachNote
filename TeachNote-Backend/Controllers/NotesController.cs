@@ -5,6 +5,8 @@ using System.IO;
 using Microsoft.Extensions.Logging.Console;
 using TeachNote_Backend.DTOs; // ✅ Import the DTO namespace
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+
 
 
 namespace TeachNote_Backend.Controllers
