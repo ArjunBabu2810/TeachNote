@@ -10587,34 +10587,19 @@
     ]
   },
   "packageFolders": {
-<<<<<<< HEAD
     "C:\\Users\\ARJUN\\.nuget\\packages\\": {}
-=======
-    "C:\\Users\\enosh\\.nuget\\packages\\": {}
->>>>>>> 3a743b3728e9cd6be197ee790ad84ba2cb53d374
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-<<<<<<< HEAD
-      "projectUniqueName": "C:\\Users\\ARJUN\\Intership\\TeachNote\\TeachNote-Backend\\TeachNote-Backend.csproj",
+      "projectUniqueName": "C:\\Users\\ARJUN\\Intership\\TeachNote\\teachnote-backend\\TeachNote-Backend.csproj",
       "projectName": "TeachNote-Backend",
-      "projectPath": "C:\\Users\\ARJUN\\Intership\\TeachNote\\TeachNote-Backend\\TeachNote-Backend.csproj",
+      "projectPath": "C:\\Users\\ARJUN\\Intership\\TeachNote\\teachnote-backend\\TeachNote-Backend.csproj",
       "packagesPath": "C:\\Users\\ARJUN\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\ARJUN\\Intership\\TeachNote\\TeachNote-Backend\\obj\\",
+      "outputPath": "C:\\Users\\ARJUN\\Intership\\TeachNote\\teachnote-backend\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\ARJUN\\AppData\\Roaming\\NuGet\\NuGet.Config"
-=======
-      "projectUniqueName": "C:\\Users\\enosh\\Desktop\\TeachNote\\TeachNote-Backend\\TeachNote-Backend.csproj",
-      "projectName": "TeachNote-Backend",
-      "projectPath": "C:\\Users\\enosh\\Desktop\\TeachNote\\TeachNote-Backend\\TeachNote-Backend.csproj",
-      "packagesPath": "C:\\Users\\enosh\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\enosh\\Desktop\\TeachNote\\TeachNote-Backend\\obj\\",
-      "projectStyle": "PackageReference",
-      "configFilePaths": [
-        "C:\\Users\\enosh\\AppData\\Roaming\\NuGet\\NuGet.Config"
->>>>>>> 3a743b3728e9cd6be197ee790ad84ba2cb53d374
       ],
       "originalTargetFrameworks": [
         "net8.0"
@@ -10732,7 +10717,7 @@
       "code": "Undefined",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "Problem reading the cache file C:\\Users\\ARJUN\\Intership\\TeachNote\\TeachNote-Backend\\obj\\project.nuget.cache : Invalid property identifier character: <. Path 'version', line 3, position 0."
+      "message": "Problem reading the cache file C:\\Users\\ARJUN\\Intership\\TeachNote\\teachnote-backend\\obj\\project.nuget.cache : Invalid property identifier character: <. Path 'version', line 3, position 0."
     }
   ]
 }

@@ -1,37 +1,20 @@
 {
   "format": 1,
   "restore": {
-<<<<<<< HEAD
-    "C:\\Users\\ARJUN\\Intership\\TeachNote\\TeachNote-Backend\\TeachNote-Backend.csproj": {}
+    "C:\\Users\\ARJUN\\Intership\\TeachNote\\teachnote-backend\\TeachNote-Backend.csproj": {}
   },
   "projects": {
-    "C:\\Users\\ARJUN\\Intership\\TeachNote\\TeachNote-Backend\\TeachNote-Backend.csproj": {
+    "C:\\Users\\ARJUN\\Intership\\TeachNote\\teachnote-backend\\TeachNote-Backend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ARJUN\\Intership\\TeachNote\\TeachNote-Backend\\TeachNote-Backend.csproj",
+        "projectUniqueName": "C:\\Users\\ARJUN\\Intership\\TeachNote\\teachnote-backend\\TeachNote-Backend.csproj",
         "projectName": "TeachNote-Backend",
-        "projectPath": "C:\\Users\\ARJUN\\Intership\\TeachNote\\TeachNote-Backend\\TeachNote-Backend.csproj",
+        "projectPath": "C:\\Users\\ARJUN\\Intership\\TeachNote\\teachnote-backend\\TeachNote-Backend.csproj",
         "packagesPath": "C:\\Users\\ARJUN\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ARJUN\\Intership\\TeachNote\\TeachNote-Backend\\obj\\",
+        "outputPath": "C:\\Users\\ARJUN\\Intership\\TeachNote\\teachnote-backend\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\ARJUN\\AppData\\Roaming\\NuGet\\NuGet.Config"
-=======
-    "C:\\Users\\enosh\\Desktop\\TeachNote\\TeachNote-Backend\\TeachNote-Backend.csproj": {}
-  },
-  "projects": {
-    "C:\\Users\\enosh\\Desktop\\TeachNote\\TeachNote-Backend\\TeachNote-Backend.csproj": {
-      "version": "1.0.0",
-      "restore": {
-        "projectUniqueName": "C:\\Users\\enosh\\Desktop\\TeachNote\\TeachNote-Backend\\TeachNote-Backend.csproj",
-        "projectName": "TeachNote-Backend",
-        "projectPath": "C:\\Users\\enosh\\Desktop\\TeachNote\\TeachNote-Backend\\TeachNote-Backend.csproj",
-        "packagesPath": "C:\\Users\\enosh\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\enosh\\Desktop\\TeachNote\\TeachNote-Backend\\obj\\",
-        "projectStyle": "PackageReference",
-        "configFilePaths": [
-          "C:\\Users\\enosh\\AppData\\Roaming\\NuGet\\NuGet.Config"
->>>>>>> 3a743b3728e9cd6be197ee790ad84ba2cb53d374
         ],
         "originalTargetFrameworks": [
           "net8.0"
