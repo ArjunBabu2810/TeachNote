@@ -194,6 +194,9 @@ namespace TeachNote_Backend.Controllers
             if (user == null)
             return Unauthorized("Invalid user."); // Handle null case
 
+            var sub = await _context.Subjects.FirstOrDefaultAsync(s=> s.id == dto.SubjectId);
+
+            note.subjectId = sub.id;
             note.userId = user.id;
 
             _context.Notes.Add(note);
