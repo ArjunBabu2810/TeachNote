@@ -17,19 +17,11 @@ build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = TeachNote_Backend
 build_property.RootNamespace = TeachNote_Backend
-<<<<<<< HEAD
-build_property.ProjectDir = C:\Users\ARJUN\Intership\TeachNote\TeachNote-Backend\
-=======
-build_property.ProjectDir = C:\Users\enosh\Desktop\TeachNote\TeachNote-Backend\
->>>>>>> 3a743b3728e9cd6be197ee790ad84ba2cb53d374
+build_property.ProjectDir = C:\Users\ashfa\OneDrive\Desktop\TeachNote\TeachNote-Backend\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 2.1
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-<<<<<<< HEAD
-build_property.MSBuildProjectDirectory = C:\Users\ARJUN\Intership\TeachNote\TeachNote-Backend
-=======
-build_property.MSBuildProjectDirectory = C:\Users\enosh\Desktop\TeachNote\TeachNote-Backend
->>>>>>> 3a743b3728e9cd6be197ee790ad84ba2cb53d374
+build_property.MSBuildProjectDirectory = C:\Users\ashfa\OneDrive\Desktop\TeachNote\TeachNote-Backend
 build_property._RazorSourceGeneratorDebug = 

@@ -64,7 +64,7 @@ public async Task<ActionResult<IEnumerable<Department>>> GetDepartments()
                                .FirstOrDefaultAsync(d => d.name == department.name);
 
 
-        if (exist != null)
+        if (exists != null)
         {
             return BadRequest(new { message = "Department name already exists." });
         }
