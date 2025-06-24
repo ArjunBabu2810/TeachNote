@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TeachNote_Backend.Models;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace TeachNote_Backend.Controllers
@@ -72,6 +73,7 @@ namespace TeachNote_Backend.Controllers
         // }
 
         // POST: api/Subjects    tested successfully
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public async Task<ActionResult<Subjects>> PostSubject(Subjects subject)
         {
@@ -118,6 +120,7 @@ namespace TeachNote_Backend.Controllers
         }
 
         // DELETE: api/Subjects/5       tested successfully
+        [Authorize(Roles = "admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSubject(int id)
         {

@@ -5,6 +5,8 @@ using System.IO;
 using Microsoft.Extensions.Logging.Console;
 using TeachNote_Backend.DTOs; // ✅ Import the DTO namespace
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+
 
 
 namespace TeachNote_Backend.Controllers
@@ -146,6 +148,7 @@ namespace TeachNote_Backend.Controllers
         //     return CreatedAtAction(nameof(GetNote), new { id = note.id }, note);
         // }
 
+        [Authorize(Roles = "admin,teacher")]
         [HttpPost("upload")]
         public async Task<IActionResult> UploadNote([FromForm] NoteUploadDto dto)
         {
@@ -191,6 +194,9 @@ namespace TeachNote_Backend.Controllers
             if (user == null)
             return Unauthorized("Invalid user."); // Handle null case
 
+            var sub = await _context.Subjects.FirstOrDefaultAsync(s=> s.id == dto.SubjectId);
+
+            note.subjectId = sub.id;
             note.userId = user.id;
 
             _context.Notes.Add(note);
@@ -202,6 +208,8 @@ namespace TeachNote_Backend.Controllers
 
         // ───────────────────────────────────────────────
         // DELETE: api/notes/5       tested successfully
+
+        [Authorize(Roles = "admin,teacher")]
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteNote(int id)
         {

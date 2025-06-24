@@ -10587,11 +10587,16 @@
     ]
   },
   "packageFolders": {
+<<<<<<< HEAD
     "C:\\Users\\ARJUN\\.nuget\\packages\\": {}
+=======
+    "C:\\Users\\ashfa\\.nuget\\packages\\": {}
+>>>>>>> dcbdd688ed6a87dd8e30261a726c12823ce94da0
   },
   "project": {
     "version": "1.0.0",
     "restore": {
+<<<<<<< HEAD
       "projectUniqueName": "C:\\Users\\ARJUN\\Intership\\TeachNote\\teachnote-backend\\TeachNote-Backend.csproj",
       "projectName": "TeachNote-Backend",
       "projectPath": "C:\\Users\\ARJUN\\Intership\\TeachNote\\teachnote-backend\\TeachNote-Backend.csproj",
@@ -10600,6 +10605,16 @@
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\ARJUN\\AppData\\Roaming\\NuGet\\NuGet.Config"
+=======
+      "projectUniqueName": "C:\\Users\\ashfa\\OneDrive\\Desktop\\TeachNote\\TeachNote-Backend\\TeachNote-Backend.csproj",
+      "projectName": "TeachNote-Backend",
+      "projectPath": "C:\\Users\\ashfa\\OneDrive\\Desktop\\TeachNote\\TeachNote-Backend\\TeachNote-Backend.csproj",
+      "packagesPath": "C:\\Users\\ashfa\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\ashfa\\OneDrive\\Desktop\\TeachNote\\TeachNote-Backend\\obj\\",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "C:\\Users\\ashfa\\AppData\\Roaming\\NuGet\\NuGet.Config"
+>>>>>>> dcbdd688ed6a87dd8e30261a726c12823ce94da0
       ],
       "originalTargetFrameworks": [
         "net8.0"
@@ -10717,7 +10732,11 @@
       "code": "Undefined",
       "level": "Warning",
       "warningLevel": 1,
+<<<<<<< HEAD
       "message": "Problem reading the cache file C:\\Users\\ARJUN\\Intership\\TeachNote\\teachnote-backend\\obj\\project.nuget.cache : Invalid property identifier character: <. Path 'version', line 3, position 0."
+=======
+      "message": "Problem reading the cache file C:\\Users\\ashfa\\OneDrive\\Desktop\\TeachNote\\TeachNote-Backend\\obj\\project.nuget.cache : Invalid property identifier character: <. Path 'version', line 3, position 0."
+>>>>>>> dcbdd688ed6a87dd8e30261a726c12823ce94da0
     }
   ]
 }
