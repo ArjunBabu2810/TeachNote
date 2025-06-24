@@ -73,6 +73,54 @@ public class MarksController : ControllerBase
         });
     }
 
+    // ✅ GET: api/marks/self — student gets their own marks by email in token
+[Authorize(Roles = "student")]
+[HttpGet("self")]
+public async Task<ActionResult<object>> GetMyMarks()
+{
+    var email = GetUserEmail();
+
+    if (string.IsNullOrEmpty(email))
+        return Unauthorized("Invalid token.");
+
+    // Find the student using the email from JWT
+    var student = await _context.Users
+        .Include(u => u.Department)
+        .FirstOrDefaultAsync(u => u.email == email);
+
+    if (student == null)
+        return NotFound("Student not found.");
+
+    // Get marks for that student
+    var marks = await _context.Marks
+        .Include(m => m.Subjects)
+        .Where(m => m.userId == student.id)
+        .ToListAsync();
+
+    if (!marks.Any())
+        return NotFound("No marks found for this student.");
+
+    return Ok(new
+    {
+        StudentId = student.id,
+        StudentName = student.name,
+        StudentEmail = student.email,
+        DepartmentId = student.departmentId,
+        DepartmentName = student.Department?.name,
+        Marks = marks.Select(m => new
+        {
+            SubjectId = m.subjectId,
+            SubjectName = m.Subjects.name,
+            Semester = m.Subjects.semester,
+            Internal1 = m.internal1,
+            Internal2 = m.internal2,
+            External = m.external,
+            Total = m.internal1 + m.internal2 + m.external
+        })
+    });
+}
+
+
     // ✅ GET marks by subjectId — teacher only
     [Authorize(Roles = "teacher")]
     [HttpGet("subject/{subjectId}")]
