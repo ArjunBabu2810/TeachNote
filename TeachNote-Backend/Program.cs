@@ -1,11 +1,8 @@
 using System.Text;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using TeachNote_Backend.Models;  
+using TeachNote_Backend.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -78,9 +75,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseAuthentication();
-app.UseAuthorization();   
+app.UseAuthorization();
 
-app.MapControllers(); 
+app.MapControllers();
 app.MapGet("/", () => "API is running!");
 app.MapGet("/test", () => "Test endpoint works!");
 
